@@ -1,26 +1,15 @@
 <template>
-  <img alt="Vue logo" src="./assets/logo.png">
-  <HelloWorld msg="Welcome to Your Vue.js App"/>
+  <div id="app">
+    <div class="container">
+      <div class="text-center">
+        <h2 class="text-center mt-5">Trending Movies 🍿</h2>
+        <p>Keep up with the hottest movies that are trending this week.</p>
+      </div>
+
+      <div class="my-4">
+        <a href="#" class="mx-3 h4"> Trending today</a>
+        <a href="#" class="mx-3 h4">This week</a>
+      </div>
+    </div>
+  </div>
 </template>
-
-<script>
-import HelloWorld from './components/HelloWorld.vue'
-
-export default {
-  name: 'App',
-  components: {
-    HelloWorld
-  }
-}
-</script>
-
-<style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
-</style>
