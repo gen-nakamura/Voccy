@@ -1,4 +1,4 @@
-# VocabApp
+# Voccy
 - [x] something you want to achieve 
 - [x] option + C to check the mark
 
