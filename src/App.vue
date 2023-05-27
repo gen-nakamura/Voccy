@@ -7,9 +7,17 @@
 </template>
 
 <script>
+import { createCompletion } from '@/api/api';
+
 export default {
+  // async created() {
+    // },
   methods: {
-    startLearning() {
+    async startLearning() {
+      console.log('start learning');
+      const prompt = 'MY PROMPT HERE';
+      const response = await createCompletion(prompt);
+      console.log(response);
       // Start learning logic
       // ボキャブラリーアプリの学習を開始する処理
     },
