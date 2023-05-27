@@ -1,4 +1,2 @@
 node_modules/
 package.json
-#Electron-builder output
-/dist_electron
