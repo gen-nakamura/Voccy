@@ -20,6 +20,7 @@
 - [ ] こんな時英語でなんて言う？
   - 形容詞での表現の幅が増えたり
   - 同じ事象を表現するのにも引き出しが増える
+- [ ] この会話にどう返す？
 
 `Input: New vocabulary or phrase.`
 - [ ] Just give you an answer.
