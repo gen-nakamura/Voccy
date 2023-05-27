@@ -2,7 +2,8 @@
 - [x] something you want to achieve 
 - [x] option + C to check the mark
 
-## You can ask question like this
+## User Stories
+### You can ask question like this
 `Input: An English sentence, phrase or word.`
 - [ ] Rephrase it.
 - [ ] How can I say this in English?
@@ -17,19 +18,51 @@
 
 `Input: Some specific situation you face.`
 - [ ] こんな時英語でなんて言う？
+  - 形容詞での表現の幅が増えたり
+  - 同じ事象を表現するのにも引き出しが増える
 
 `Input: New vocabulary or phrase.`
-- [ ] Put definition when you
-  - [ ] press Command + Enter: English
-  - [ ] press option + Enter: Japanese
+- [ ] Just give you an answer.
+
+
+### Vocab test
+- [ ] User can see vocabs
+- [ ] User has a button to see the correct answer.
+- [ ] User can submit the result with three options.
+  - [ ] Immediate understand
+  - [ ] Understand in a min.
+  - [ ] Cannot understand.
+
+### Reminder
+- [ ] Reminds your vocab test in a certain days after.
+- [ ] User can choose how many times in a day to have a set of tests.
+
+
+### Pronunciation
+- [ ] Put instructions how to pronunce it.
+
+### Basic usage
+- [ ] User can open a prompt with shortcut keys.
+  - [ ] ^ + Space
+  - [ ] ^ + ⇧ + Space: With a list of available questions.
+  - [ ] ^ + ⌘ + Space: Automatically paste clipboard to the vocabulary section.
+- [ ] Put answer when you press
+  - [ ] ⌘ + Enter: English
+  - [ ] ⌥ + Enter: Japanese
+- [ ] Show rephrasing or other example sentences when the user presses [ + ]
 - [ ] Submit the vocabulary when you press Command + Shift + Enter.
 
-## Vocab test
-- [ ] User can 
+## Class definitions
 
-## Reminder
-
-
-## Pronunciation
-- [ ] Put instructions how to pronunce it.
-- [ ] 
+## TODO
+- 画面をどうするか
+- 問題の方式、ただただanswerを隠せばいいのか、逆も用意したほうがいいのか
+  - Vocab - Definitionというのを撤廃してQuestion - Answerの方式にする。
+- caht GPTの質問方法について精度高めていかないと
+- インプットの覚え方としてはいいものになりそう、アウトプットが十分にできる？
+- クラス構成
+- MVP
+  - アプリを開ける
+  - 汚くても画面がある
+  - 単語を入力、記憶ができる
+  - それぞれのテストについてステータスを記憶できる
