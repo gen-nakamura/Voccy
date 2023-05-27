@@ -81,3 +81,4 @@
 - It can be stored in a db.
 - User can do a test with the word.
 - The result will also be stored into db.
+- distribute an app with electron-forge
