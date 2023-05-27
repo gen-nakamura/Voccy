@@ -3,7 +3,7 @@
 - [x] option + C to check the mark
 
 ## User Stories
-### You can ask question like this
+### You can ask question like this (The answer will be created with ChatGPT API)
 `Input: An English sentence, phrase or word.`
 - [ ] Rephrase it.
 - [ ] How can I say this in English?
@@ -53,6 +53,12 @@
 - [ ] Submit the vocabulary when you press Command + Shift + Enter.
 
 ## Class definitions
+- Vocab
+  - question
+  - answer
+  - previousStatus
+  - scheduledTestDate
+
 
 ## TODO
 - 画面をどうするか
@@ -66,3 +72,12 @@
   - 汚くても画面がある
   - 単語を入力、記憶ができる
   - それぞれのテストについてステータスを記憶できる
+- 名刺を画像と一緒に覚える
+- アウトプットも大事だけどこのアプリで主に担うのはインプットの補助。アウトプット学習は日常から工夫することで補いたいs
+
+## MVP
+- Basic pages.
+- User can input a word.
+- It can be stored in a db.
+- User can do a test with the word.
+- The result will also be stored into db.
