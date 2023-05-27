@@ -1,6 +1,6 @@
 'use strict'
 
-import { app, protocol, BrowserWindow } from 'electron'
+import { app, protocol, BrowserWindow, Menu } from 'electron'
 import { createProtocol } from 'vue-cli-plugin-electron-builder/lib'
 import installExtension, { VUEJS3_DEVTOOLS } from 'electron-devtools-installer'
 const isDevelopment = process.env.NODE_ENV !== 'production'
@@ -79,3 +79,27 @@ if (isDevelopment) {
     })
   }
 }
+
+const template = [
+  {
+    label: 'File',
+    submenu: [
+      { label: 'New', accelerator: 'CmdOrCtrl+N', click: () => { /* メニューがクリックされた時の処理 */ } },
+      { label: 'Open', accelerator: 'CmdOrCtrl+O', click: () => { /* メニューがクリックされた時の処理 */ } },
+      { label: 'Save', accelerator: 'CmdOrCtrl+S', click: () => { /* メニューがクリックされた時の処理 */ } },
+      { type: 'separator' },
+      { label: 'Quit', accelerator: 'CmdOrCtrl+Q', click: () => { app.quit(); } }
+    ]
+  },
+  {
+    label: 'Edit',
+    submenu: [
+      { label: 'Cut', accelerator: 'CmdOrCtrl+X', click: () => { /* メニューがクリックされた時の処理 */ } },
+      { label: 'Copy', accelerator: 'CmdOrCtrl+C', click: () => { /* メニューがクリックされた時の処理 */ } },
+      { label: 'Paste', accelerator: 'CmdOrCtrl+V', click: () => { /* メニューがクリックされた時の処理 */ } }
+    ]
+  }
+];
+
+const menu = Menu.buildFromTemplate(template);
+console.log('j;adljk')
