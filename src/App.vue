@@ -15,7 +15,7 @@ export default {
   methods: {
     async startLearning() {
       console.log('start learning');
-      const prompt = 'MY PROMPT HERE';
+      const prompt = 'ヌケる官能小説の一説をください。';
       const response = await createCompletion(prompt);
       console.log(response);
       // Start learning logic
