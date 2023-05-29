@@ -16,8 +16,8 @@ export default {
     async startLearning() {
       console.log('start learning');
       const prompt = 'ヌケる官能小説の一説をください。';
-      const response = await createCompletion(prompt);
-      console.log(response);
+      createCompletion(prompt);
+      // console.log(response);
       // Start learning logic
       // ボキャブラリーアプリの学習を開始する処理
     },
