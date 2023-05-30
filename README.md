@@ -54,7 +54,7 @@
 - [ ] Submit the vocabulary when you press Command + Shift + Enter.
 
 ## Class definitions
-- Vocab
+- flashcards
   - id
   - question
   - answer
