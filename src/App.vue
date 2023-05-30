@@ -3,6 +3,7 @@
     <h1>Welcome to the Vocabulary App</h1>
     <p>Start learning and expanding your vocabulary!</p>
     <button @click="startLearning">Start Learning</button>
+    <HelloWorld />
   </div>
 </template>
 
