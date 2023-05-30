@@ -18,9 +18,7 @@
   "main": "background.js",
   "dependencies": {
     "core-js": "^3.8.3",
-    "fs": "^0.0.1-security",
     "openai": "^3.2.1",
-    "path": "^0.12.7",
     "vue": "^3.2.13"
   },
   "devDependencies": {
