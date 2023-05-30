@@ -55,10 +55,12 @@
 
 ## Class definitions
 - Vocab
+  - id
   - question
   - answer
-  - previousStatus
-  - scheduledTestDate
+  - last_result
+  - result
+  - last_test_timestamp
 
 
 ## TODO
