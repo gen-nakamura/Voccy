@@ -20,8 +20,7 @@
     "core-js": "^3.8.3",
     "openai": "^3.2.1",
     "sqlite3": "^5.1.6",
-    "vue": "^3.2.13",
-    "vue-sqlite-hook": "^3.0.3"
+    "vue": "^3.2.13"
   },
   "devDependencies": {
     "@babel/core": "^7.12.16",
@@ -33,7 +32,8 @@
     "electron-devtools-installer": "^3.1.0",
     "eslint": "^7.32.0",
     "eslint-plugin-vue": "^8.0.3",
-    "vue-cli-plugin-electron-builder": "~2.1.1"
+    "vue-cli-plugin-electron-builder": "~2.1.1",
+    "vue-sqlite-hook": "^3.0.3"
   },
   "eslintConfig": {
     "root": true,
