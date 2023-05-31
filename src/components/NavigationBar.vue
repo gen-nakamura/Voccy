@@ -1,7 +1,7 @@
 <template>
-  <div>
-    <button @click="switchScreen('Screen1')">Screen 1</button>
-    <button @click="switchScreen('Screen2')">Screen 2</button>
+  <div class="navigation-bar">
+    <button @click="switchScreen('HelloWorld')" class="nav-button">HelloWorld</button>
+    <button @click="switchScreen('FlashCards')" class="nav-button">FlashCards</button>
   </div>
 </template>
 
@@ -14,3 +14,28 @@ export default {
   }
 };
 </script>
+
+<style scoped>
+.navigation-bar {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #333;
+  height: 50px;
+}
+
+.nav-button {
+  padding: 10px 20px;
+  margin: 0 10px;
+  color: #fff;
+  background-color: #4caf50;
+  border: none;
+  border-radius: 4px;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.nav-button:hover {
+  background-color: #45a049;
+}
+</style>
