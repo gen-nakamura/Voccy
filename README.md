@@ -62,6 +62,12 @@
   - result
   - last_test_timestamp
 
+## Setting Options
+- remind_times
+- remind_nums
+- max_test_nums
+- timezone
+
 
 ## TODO
 - [ ] 画面をどうするか
@@ -82,6 +88,12 @@
 - [ ] flashcardsのリストを表示できる
   - [ ] 修正
   - [ ] 削除
+  - [ ] テストする機能
+- [ ] getQuizzes関数で今テストするべきものを取り出す
+- [ ] これらを時間でトリガー発生させる
+- [ ] reminder時間を計算する関数
+  - [ ] configがアップデートされる度に呼び出す
+  - [ ] 時間トリガーも変更する
 - [ ] 名詞を画像と一緒に覚える
 - [ ] アウトプットも大事だけどこのアプリで主に担うのはインプットの補助。アウトプット学習は日常から工夫することで補いたい
 
