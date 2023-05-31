@@ -10,9 +10,10 @@
 </template>
 
 <script>
-import { createCompletion } from '@/api/api';
+import { createCompletion } from './server/api';
 import NavigationBar from './components/NavigationBar.vue';
 import HelloWorld from './components/HelloWorld.vue';
+import FlashcardsTest from './components/FlashcardsTest.vue';
 
 export default {
   data() {
@@ -22,7 +23,8 @@ export default {
   },
   components: {
     NavigationBar,
-    HelloWorld
+    HelloWorld,
+    FlashcardsTest
   },
   methods: {
     handleSwitchScreen(screen) {
