@@ -1,3 +1,4 @@
+import { doSomethingAsync } from './db';
 const express = require('express');
 const sqlite3 = require('sqlite3').verbose();
 
@@ -15,42 +16,16 @@ export function createServer() {
     next();
 });
 
-server.post('/api/data', (req, res) => {
+server.post('/api/data', async (req, res) => {
     console.log('get a post request');
     const { questionInput, answerInput } = req.body;
-
-    const dbPath = './voccy.db'; // SQLiteデータベースファイルのパス
-    const db = new sqlite3.Database(dbPath);
-
-    const createTable = `
-    CREATE TABLE IF NOT EXISTS flashcards (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        question TEXT,
-        answer TEXT,
-        last_result TEXT,
-        result TEXT,
-        last_test_timestamp TEXT
-    )`;
-
-    db.run(createTable, error => {
-        if (error) {
-            console.error('Error creating table:', error);
-            res.status(500).json({ error: 'Internal Server Error' });
-        } else {
-            console.log("Table created successfully or it already exists");
-            
-            const sql = 'INSERT INTO flashcards (question, answer) VALUES (?, ?)';
-            db.run(sql, [questionInput, answerInput], function (error) {
-                if (error) {
-                    console.error('Error inserting data:', error);
-                    res.status(500).json({ error: 'Internal Server Error' });
-                } else {
-                    res.json({ success: true });
-                }
-            });
-        }
-    });
-
+    try {
+        await doSomethingAsync(questionInput, answerInput);
+        res.json({ success: true });
+    } catch (error) {
+        console.log('error in db operation: ', error);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
 });
 
 return server;
