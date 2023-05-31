@@ -97,6 +97,21 @@
 - [ ] 名詞を画像と一緒に覚える
 - [ ] アウトプットも大事だけどこのアプリで主に担うのはインプットの補助。アウトプット学習は日常から工夫することで補いたい
 
+- [ ] download the app, initialize
+- [ ] update settings
+- [ ] put some words
+- [ ] do a test
+- [ ] edit some words
+- [ ] delete some words
+
+- create F table
+- insert, update, delete F records
+- create S table
+- update S record
+- read all the F records
+- read the F records with some conditions
+- change status of a record
+
 ## MVP
 - Basic pages.
 - User can input a word.
