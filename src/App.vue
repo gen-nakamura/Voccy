@@ -1,19 +1,33 @@
 <template>
   <div class="home">
+    <NavigationBar @switch-screen="handleSwitchScreen" />
     <h1>Welcome to the Vocabulary App</h1>
     <p>Start learning and expanding your vocabulary!</p>
     <button @click="startLearning">Start Learning</button>
-    <HelloWorld />
+    <component :is="currentScreen"></component>
+    <!-- <HelloWorld /> -->
   </div>
 </template>
 
 <script>
 import { createCompletion } from '@/api/api';
+import NavigationBar from './components/NavigationBar.vue';
+import HelloWorld from './components/HelloWorld.vue';
 
 export default {
-  // async created() {
-    // },
+  data() {
+    return {
+      currentScreen: 'HelloWorld' // 最初に表示する画面を指定
+    };
+  },
+  components: {
+    NavigationBar,
+    HelloWorld
+  },
   methods: {
+    handleSwitchScreen(screen) {
+      this.currentScreen = screen; // 画面を切り替える
+    },
     async startLearning() {
       console.log('start learning');
       const prompt = 'ヌケる官能小説の一説をください。';
