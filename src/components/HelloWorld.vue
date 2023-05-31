@@ -8,8 +8,8 @@
 </template>
 
 <script>
-// import fs from 'fs';
-// import path from 'path';
+import axios from 'axios';
+
 
 export default {
   name: 'HelloWorld',
@@ -18,21 +18,26 @@ export default {
   },
   data() {
     return {
-      questionInput: '',
-      answerInput: ''
+      questionInput: 'sampleQuestion',
+      answerInput: 'sampleAnswer'
     };
   },
   methods: {
-    // saveData() {
-    //   const filePath = path.join(__dirname, 'data.json');
-    //   const data = {
-    //     question: this.questionInput,
-    //     answer: this.answerInput
-    //   };
-    //   const jsonData = JSON.stringify(data, null, 2);
-    //   fs.writeFileSync(filePath, jsonData, 'utf-8');
-    //   console.log('Data saved successfully!');
-    // }
+    saveData() {
+      const data = {
+        questionInput: this.questionInput,
+        answerInput: this.answerInput
+      };
+
+      axios.post('http://localhost:3000/api/data', data)
+        .then(response => {
+          console.log(response.data);
+          // Handle the response as needed
+        })
+        .catch(error => {
+          console.error('Error sending data:', error);
+        });
+    }
   }
 };
 </script>
