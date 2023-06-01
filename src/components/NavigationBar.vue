@@ -1,7 +1,7 @@
 <template>
   <div class="navigation-bar">
     <div class="nav-links">
-      <button @click="switchScreen('HelloWorld')" class="nav-button">HelloWorld</button>
+      <button @click="switchScreen('NewVocab')" class="nav-button">NewVocab</button>
       <button @click="switchScreen('FlashcardsTest')" class="nav-button">FlashcardsTest</button>
     </div>
   </div>

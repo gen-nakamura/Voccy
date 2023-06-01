@@ -1,8 +1,6 @@
 <template>
   <NavigationBar @switch-screen="handleSwitchScreen" />
   <div class="home">
-    <h1>Welcome to the Vocabulary App</h1>
-    <p>Start learning and expanding your vocabulary!</p>
     <button @click="startLearning">Start Learning</button>
     <component :is="currentScreen"></component>
     <!-- <HelloWorld /> -->
@@ -12,18 +10,18 @@
 <script>
 import { createCompletion } from './server/api';
 import NavigationBar from './components/NavigationBar.vue';
-import HelloWorld from './components/HelloWorld.vue';
+import NewVocab from './components/NewVocab.vue';
 import FlashcardsTest from './components/FlashcardsTest.vue';
 
 export default {
   data() {
     return {
-      currentScreen: 'HelloWorld' // 最初に表示する画面を指定
+      currentScreen: 'NewVocab' // 最初に表示する画面を指定
     };
   },
   components: {
     NavigationBar,
-    HelloWorld,
+    NewVocab,
     FlashcardsTest
   },
   methods: {

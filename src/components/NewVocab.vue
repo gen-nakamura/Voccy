@@ -1,5 +1,5 @@
 <template>
-    <h1>{{ msg }}aaa</h1>
+    <!-- <h1>{{ msg }}</h1> -->
     <div class="form-container">
       <input type="text" v-model="questionInput" placeholder="Question" class="input-field">
       <input type="text" v-model="answerInput" placeholder="Answer" class="input-field">
@@ -12,7 +12,7 @@ import axios from 'axios';
 
 
 export default {
-  name: 'HelloWorld',
+  name: 'NewVocab',
   props: {
     msg: String
   },
