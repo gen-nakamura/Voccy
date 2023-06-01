@@ -52,13 +52,13 @@ function createSettingsTable() {
 }
 
 // needs to be modified→全部この書き方に統一したらわかりやすい説
-const params = {
-  $remind_times: remindTimes,
-  $remind_nums: remindNums,
-  $max_test_nums: maxTestNums,
-  $timezone: timezone,
-  $id: id
-};
+// const params = {
+//   $remind_times: remindTimes,
+//   $remind_nums: remindNums,
+//   $max_test_nums: maxTestNums,
+//   $timezone: timezone,
+//   $id: id
+// };
 
 function updateSettings() {
   return new Promise((resolve, reject) => {
