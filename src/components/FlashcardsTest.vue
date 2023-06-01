@@ -16,13 +16,13 @@
 </template>
 
 <script>
-import axios from 'axios';
+// import axios from 'axios';
 
 export default {
   data() {
     return {
-      currentQuestion: '',
-      currentAnswer: '',
+      currentQuestion: 'Sample Question',
+      currentAnswer: 'Sample Answer',
       showingAnswer: false
     };
   },
@@ -31,18 +31,18 @@ export default {
   },
   methods: {
     getQuestion() {
-      axios.get('/api/question')
-        .then(response => {
-          this.currentQuestion = response.data.question;
-          this.currentAnswer = response.data.answer;
-          this.showingAnswer = false;
-        })
-        .catch(error => {
-          console.error('Error getting question:', error);
-        });
+      // axios.get('/api/question')
+      //   .then(response => {
+      //     this.currentQuestion = response.data.question;
+      //     this.currentAnswer = response.data.answer;
+      //     this.showingAnswer = false;
+      //   })
+      //   .catch(error => {
+      //     console.error('Error getting question:', error);
+      //   });
     },
     showAnswer() {
-      this.showingAnswer = true;
+      this.showingAnswer = !this.showingAnswer;
     },
     submitAnswer(isCorrect, isPerfect = false) {
       // フロントエンドからサーバーサイドに回答を送信するロジックを追加する

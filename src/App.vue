@@ -1,6 +1,6 @@
 <template>
+  <NavigationBar @switch-screen="handleSwitchScreen" />
   <div class="home">
-    <NavigationBar @switch-screen="handleSwitchScreen" />
     <h1>Welcome to the Vocabulary App</h1>
     <p>Start learning and expanding your vocabulary!</p>
     <button @click="startLearning">Start Learning</button>
@@ -43,7 +43,12 @@ export default {
 </script>
 
 <style scoped>
+.app {
+  position: relative;
+}
+
 .home {
+  margin-top: 50px; /* ナビゲーションバーの高さ分だけ下にスペースを空ける */
   display: flex;
   flex-direction: column;
   align-items: center;
