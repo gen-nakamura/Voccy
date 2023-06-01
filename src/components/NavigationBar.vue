@@ -1,7 +1,9 @@
 <template>
   <div class="navigation-bar">
-    <button @click="switchScreen('HelloWorld')" class="nav-button">HelloWorld</button>
-    <button @click="switchScreen('FlashCards')" class="nav-button">FlashCards</button>
+    <div class="nav-links">
+      <button @click="switchScreen('HelloWorld')" class="nav-button">HelloWorld</button>
+      <button @click="switchScreen('FlashcardsTest')" class="nav-button">FlashcardsTest</button>
+    </div>
   </div>
 </template>
 
@@ -9,7 +11,7 @@
 export default {
   methods: {
     switchScreen(screen) {
-      this.$emit('switch-screen', screen); // 親コンポーネントに画面切り替えのイベントを通知
+      this.$emit('switch-screen', screen);
     }
   }
 };
@@ -17,25 +19,34 @@ export default {
 
 <style scoped>
 .navigation-bar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  background-color: #f8f8f8;
+  padding: 10px;
+  border-bottom: 1px solid #ccc;
+}
+
+.nav-links {
   display: flex;
-  justify-content: center;
   align-items: center;
-  background-color: #333;
-  height: 50px;
 }
 
 .nav-button {
   padding: 10px 20px;
   margin: 0 10px;
-  color: #fff;
-  background-color: #4caf50;
+  color: #333;
+  background-color: transparent;
   border: none;
   border-radius: 4px;
   font-size: 16px;
   cursor: pointer;
+  transition: all 0.3s ease;
 }
 
 .nav-button:hover {
-  background-color: #45a049;
+  background-color: #333;
+  color: #fff;
 }
 </style>
