@@ -1,7 +1,7 @@
 <template>
   <NavigationBar @switch-screen="handleSwitchScreen" />
   <div class="home">
-    <button @click="startLearning">Start Learning</button>
+    <!-- <button @click="startLearning">Start Learning</button> -->
     <component :is="currentScreen"></component>
     <!-- <HelloWorld /> -->
   </div>
