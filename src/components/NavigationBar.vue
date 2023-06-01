@@ -23,7 +23,7 @@ export default {
   top: 0;
   left: 0;
   width: 100%;
-  background-color: #f8f8f8;
+  background-color: white;
   padding: 10px;
   border-bottom: 1px solid #ccc;
 }
