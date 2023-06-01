@@ -20,6 +20,7 @@
 - [ ] こんな時英語でなんて言う？
   - 形容詞での表現の幅が増えたり
   - 同じ事象を表現するのにも引き出しが増える
+- [ ] この会話にどう返す？
 
 `Input: New vocabulary or phrase.`
 - [ ] Just give you an answer.
@@ -53,27 +54,63 @@
 - [ ] Submit the vocabulary when you press Command + Shift + Enter.
 
 ## Class definitions
-- Vocab
+- flashcards
+  - id
   - question
   - answer
-  - previousStatus
-  - scheduledTestDate
+  - last_result
+  - result
+  - last_test_timestamp
+
+## Setting Options
+- remind_times
+- remind_nums
+- max_test_nums
+- timezone
 
 
 ## TODO
-- 画面をどうするか
-- 問題の方式、ただただanswerを隠せばいいのか、逆も用意したほうがいいのか
-  - Vocab - Definitionというのを撤廃してQuestion - Answerの方式にする。
-- caht GPTの質問方法について精度高めていかないと
-- インプットの覚え方としてはいいものになりそう、アウトプットが十分にできる？
-- クラス構成
-- MVP
-  - アプリを開ける
-  - 汚くても画面がある
-  - 単語を入力、記憶ができる
-  - それぞれのテストについてステータスを記憶できる
-- 名刺を画像と一緒に覚える
-- アウトプットも大事だけどこのアプリで主に担うのはインプットの補助。アウトプット学習は日常から工夫することで補いたいs
+- [ ] 画面をどうするか
+- [ ] 問題の方式、ただただanswerを隠せばいいのか、逆も用意したほうがいいのか
+  - [ ] Vocab - Definitionというのを撤廃してQuestion - Answerの方式にする。
+- [ ] caht GPTの質問方法について精度高めていかないと
+- [ ] chat GPTへのアクセス方法について、/caht/completionも試してみる
+- [ ] max_tokenの数とか
+- [ ] play groundで試す
+- [ ] インプットの覚え方としてはいいものになりそう、アウトプットが十分にできる？
+- [x] クラス構成
+- [ ] MVP
+  - [x] アプリを開ける
+  - [x] 汚くても画面がある
+  - [x] 単語を入力、記憶ができる
+  - [ ] テスト画面
+  - [ ] それぞれのテストについてステータスを記憶できる
+- [ ] flashcardsのリストを表示できる
+  - [ ] 修正
+  - [ ] 削除
+  - [ ] テストする機能
+- [ ] getQuizzes関数で今テストするべきものを取り出す
+- [ ] これらを時間でトリガー発生させる
+- [ ] reminder時間を計算する関数
+  - [ ] configがアップデートされる度に呼び出す
+  - [ ] 時間トリガーも変更する
+- [ ] 名詞を画像と一緒に覚える
+- [ ] アウトプットも大事だけどこのアプリで主に担うのはインプットの補助。アウトプット学習は日常から工夫することで補いたい
+
+- [ ] download the app, initialize
+- [ ] update settings
+- [ ] put some words
+- [ ] do a test
+- [ ] edit some words
+- [ ] delete some words
+
+- create F table
+- insert, update, delete F records
+- create S table
+- update S record
+- read all the F records
+- read the F records with some conditions
+- change status of a record
 
 ## MVP
 - Basic pages.

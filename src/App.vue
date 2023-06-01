@@ -1,26 +1,78 @@
 <template>
-  <img alt="Vue logo" src="./assets/logo.png">
-  <HelloWorld msg="Welcome to Your Vue.js App"/>
+  <NavigationBar @switch-screen="handleSwitchScreen" />
+  <div class="home">
+    <h1>Welcome to the Vocabulary App</h1>
+    <p>Start learning and expanding your vocabulary!</p>
+    <button @click="startLearning">Start Learning</button>
+    <component :is="currentScreen"></component>
+    <!-- <HelloWorld /> -->
+  </div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+import { createCompletion } from './server/api';
+import NavigationBar from './components/NavigationBar.vue';
+import HelloWorld from './components/HelloWorld.vue';
+import FlashcardsTest from './components/FlashcardsTest.vue';
 
 export default {
-  name: 'App',
+  data() {
+    return {
+      currentScreen: 'HelloWorld' // 最初に表示する画面を指定
+    };
+  },
   components: {
-    HelloWorld
-  }
-}
+    NavigationBar,
+    HelloWorld,
+    FlashcardsTest
+  },
+  methods: {
+    handleSwitchScreen(screen) {
+      this.currentScreen = screen; // 画面を切り替える
+    },
+    async startLearning() {
+      console.log('start learning');
+      const prompt = 'ヌケる官能小説の一説をください。';
+      createCompletion(prompt);
+      // console.log(response);
+      // Start learning logic
+      // ボキャブラリーアプリの学習を開始する処理
+    },
+  },
+};
 </script>
 
-<style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+<style scoped>
+.app {
+  position: relative;
+}
+
+.home {
+  margin-top: 50px; /* ナビゲーションバーの高さ分だけ下にスペースを空ける */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
   text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
+}
+
+h1 {
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
+}
+
+p {
+  font-size: 1.2rem;
+  margin-bottom: 2rem;
+}
+
+button {
+  padding: 0.8rem 1.5rem;
+  font-size: 1.2rem;
+  border: none;
+  background-color: #4caf50;
+  color: #fff;
+  cursor: pointer;
 }
 </style>
