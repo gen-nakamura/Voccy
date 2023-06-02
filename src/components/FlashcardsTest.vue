@@ -19,7 +19,7 @@
 
 <style scoped>
 .hidden {
-  visibility: hidden;
+  opacity: 0;
 }
 
 .test-container {
@@ -71,6 +71,7 @@
 
 .answer {
   font-size: 20px;
+  transition: opacity 0.3s;
 }
 
 .answer-button {
