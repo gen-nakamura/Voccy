@@ -4,7 +4,7 @@
       <div class="card">
         <div class="card-content" ref="content">
           <h3 class="question" ref="question">{{ currentQuestion }}</h3>
-          <h3 class="answer" :class="{'hidden': !showingAnswer}">{{ currentAnswer }}</h3>
+          <h3 class="answer" :style="transitionDelay">{{ currentAnswer }}</h3>
         </div>
       </div>
     </div>
@@ -18,10 +18,6 @@
 </template>
 
 <style scoped>
-.hidden {
-  opacity: 0;
-}
-
 .test-container {
   display: flex;
   flex-direction: column;
@@ -57,6 +53,7 @@
 
 .card-content h3 {
   margin: 0;
+  white-space: pre-line;
 }
 
 .question {
@@ -127,6 +124,11 @@ export default {
       questionAndAnswerHeight: 0
     };
   },
+  computed: {
+    transitionDelay() {
+      return this.showingAnswer ? 'transition-delay: 0.3s' : 'transition-delay: 0s; opacity: 0;';
+    }
+  },
   methods: {
     showAnswer() {
       this.showingAnswer = !this.showingAnswer;
@@ -139,7 +141,7 @@ export default {
     getQuestion() {
       // データ取得のロジックを追加する
       this.currentQuestion = 'Sample Question';
-      this.currentAnswer = 'Sample Answer';
+      this.currentAnswer = 'Sample Answer\n\n\najfld;jfldkasj\n\nladsfjkk';
       this.showingAnswer = false;
       this.$nextTick(() => {
         this.questionAndAnswerHeight = this.$refs.content.clientHeight;
@@ -162,6 +164,7 @@ export default {
       if (this.showingAnswer) {
         content.style.height = this.questionAndAnswerHeight + "px";
       } else {
+        content.style.transitionDelay = '0.3s';
         content.style.height = question.clientHeight + "px";
       }
     }
