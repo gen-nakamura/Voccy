@@ -2,7 +2,7 @@
   <div class="form-container" ref="parent" style="opacity: 0; transition: opacity 0.25s;">
     <div class="input-block">
       <textarea v-model="questionInput" placeholder="Write a question" class="input-field input-question" :style="{ height: questionInputHeight }" ref="questionInput" @input="adjustQuestionInputHeight"></textarea>
-      <button @click="toggleOptions" class="options-button"><i class="fa fa-spinner"></i></button> <!-- add fa-pulse to make it spin -->
+      <button @click="toggleOptions" ref="optionsMenu" class="options-button"><i class="fa fa-spinner"></i></button> <!-- add fa-pulse to make it spin -->
       <div v-if="showOptions" class="options-menu">
         <!-- オプションメニューの内容を追加 -->
       </div>
@@ -55,14 +55,27 @@ export default {
         textarea.style.height = 'auto';
         textarea.style.height = `${textarea.scrollHeight}px`;
       }
-    }
+    },
+    handleGlobalClick(event) {
+      // クリックされた要素がオプションメニューでない場合に showOptions を false に設定する
+      const optionsMenu = this.$refs.optionsMenu;
+      if (!optionsMenu.contains(event.target)) {
+        this.showOptions = false;
+      }
+    },
   },
   mounted() {
     this.$nextTick(() => {
       this.adjustQuestionInputHeight();
       this.$refs.parent.style = "opacity: 1; transition: opacity 0.25s; transition-delay: 0.5s;"
     });
-  }
+  },
+  created() {
+    window.addEventListener('click', this.handleGlobalClick);
+  },
+  beforeUnmount() {
+    window.removeEventListener('click', this.handleGlobalClick);
+  },
 };
 </script>
 
