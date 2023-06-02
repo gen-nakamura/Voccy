@@ -1,7 +1,7 @@
 <template>
   <div class="test-container">
     <div class="card-container" @click="showAnswer">
-      <div class="card" ref="card">
+      <div class="card">
         <div class="card-content" ref="content">
           <h3 class="question" ref="question">{{ currentQuestion }}</h3>
           <h3 class="answer" :class="{'hidden': !showingAnswer}">{{ currentAnswer }}</h3>
@@ -136,38 +136,37 @@ export default {
       this.getQuestion();
     },
     getQuestion() {
-      console.log('ad;ajkl');
-      console.log(getComputedStyle(this.$refs.content).height);
       // データ取得のロジックを追加する
       this.currentQuestion = 'Sample Question';
       this.currentAnswer = 'Sample Answer';
       this.showingAnswer = false;
-      this.questionAndAnswerHeight = this.$refs.card.clientHeight;
+      this.$nextTick(() => {
+        this.questionAndAnswerHeight = this.$refs.content.clientHeight;
+        this.updateHeight();
+      });
     },
     updateHeight() {
-      this.$nextTick(() => {
-        console.log('update');
-        const question = this.$refs.question;
-        const content = this.$refs.content;
-        const originalHeight = content.clientHeight;
+      console.log('update');
+      const question = this.$refs.question;
+      const content = this.$refs.content;
+      const originalHeight = content.clientHeight;
 
-        content.style.height = originalHeight + "px";
-        content.offsetHeight; // 強制的にリフローを行い、変更したスタイルが反映されることを保証します
+      content.style.height = originalHeight + "px";
+      content.offsetHeight; // 強制的にリフローを行い、変更したスタイルが反映されることを保証します
 
-        content.style.transition = "height 0.3s ease";
-        // TODO 大きさの微調整を行う
-        // TODO テキストのフェードも実装する
-        if (this.showingAnswer) {
-          content.style.height = this.questionAndAnswerHeight + "px";
-          } else {
-            content.style.height = question.clientHeight + "px";
-        }
-      });
+      content.style.transition = "height 0.3s ease";
+      console.log(originalHeight);
+      console.log(question.clientHeight);
+      // TODO テキストのフェードも実装する
+      if (this.showingAnswer) {
+        content.style.height = this.questionAndAnswerHeight + "px";
+      } else {
+        content.style.height = question.clientHeight + "px";
+      }
     }
   },
   mounted() {
     this.getQuestion();
-    this.updateHeight();
   },
   
 };
