@@ -1,21 +1,96 @@
 <template>
+<div ref="parent" style="opacity: 0; transition: opacity 0.25s;" class="parent">
   <div class="test-container">
-    <div class="card-container" @click="showAnswer">
-      <div class="card">
-        <div class="card-content" ref="content">
+    <div class="card-container">
+      <div class="card" @click="showAnswer">
+        <div class="card-content" ref="content" :key="currentAnswer"> <!-- question idにしたい -->
           <h3 class="question" ref="question">{{ currentQuestion }}</h3>
           <h3 class="answer" :style="transitionDelay">{{ currentAnswer }}</h3>
         </div>
       </div>
     </div>
-    <!-- <button @click="showAnswer" class="answer-button">Answer</button> -->
     <div class="choices-container">
       <button @click="submitAnswer(false)" class="choice-button wrong"><i class="fas fa-times fa-2x fa-fw" aria-hidden="true"></i></button>
       <button @click="submitAnswer(true)" class="choice-button correct"><i class="far fa-circle fa-2x fa-fw" aria-hidden="true"></i></button>
       <button @click="submitAnswer(true, true)" class="choice-button correct"><i class="fas fa-check-circle fa-2x fa-fw" aria-hidden="true"></i></button>
     </div>
   </div>
+</div>
 </template>
+
+<script>
+export default {
+  data() {
+    return {
+      currentQuestion: '',
+      currentAnswer: '',
+      showingAnswer: false,
+      questionAndAnswerHeight: 0,
+      count: 0,
+      answerList: ['Sample Answer\n\n\najfld;jfldkasj\n\nladsfjkk', 'adfalkdj;lkajs;ldfa', 'Sample Answer\n\n\najfld;jfldkasj\n\nladsfjkkSample Answer\n\n\najfld;jfldkasj\n\nladsfjkk']
+    };
+  },
+  computed: {
+    transitionDelay() {
+      return this.showingAnswer ? 'transition-delay: 0.25s' : 'transition-delay: 0s; opacity: 0; pointer-events: none;';
+    }
+  },
+  methods: {
+    showAnswer() {
+      this.showingAnswer = !this.showingAnswer;
+      this.updateHeight();
+    },
+    hideAll() {
+      this.$refs.parent.style = "opacity: 0; transition: opacity 0.25s;"
+    },
+    submitAnswer(isCorrect, isPerfect = false) {
+      console.log(isCorrect, isPerfect);
+      this.$refs.parent.style = "opacity: 0; transition: opacity 0.25s";
+      setTimeout(() => {
+        this.getQuestion();
+      }, 250);
+    },
+    getQuestion() {
+      // データ取得のロジックを追加する
+      this.currentQuestion = 'Sample Question';
+      this.currentAnswer = this.answerList[this.count%3];
+      this.count++;
+      this.showingAnswer = false;
+      this.$nextTick(() => {
+        this.questionAndAnswerHeight = this.$refs.content.clientHeight;
+        this.updateHeight();
+        this.$refs.parent.style = "opacity: 1; transition: opacity 0.25s; transition-delay: 0.5s;"
+      });
+    },
+    updateHeight() {
+      console.log('update');
+      const question = this.$refs.question;
+      const content = this.$refs.content;
+      const originalHeight = content.clientHeight;
+
+      content.style.height = originalHeight + "px";
+      content.offsetHeight; // 強制的にリフローを行い、変更したスタイルが反映されることを保証します
+
+      content.style.transition = "height 0.25s ease";
+      console.log(originalHeight);
+      console.log(question.clientHeight);
+      // TODO テキストのフェードも実装する
+      if (this.showingAnswer) {
+        content.style.height = this.questionAndAnswerHeight + "px";
+        question.style = 'border-bottom: 2px solid #ccc; transition-delay: 0.25s'
+      } else {
+        content.style.transitionDelay = '0.25s';
+        content.style.height = question.clientHeight + "px";
+        question.style = 'border-bottom: 2px solid #cccccc00'
+      }
+    }
+  },
+  mounted() {
+    this.getQuestion();
+  },
+  
+};
+</script>
 
 <style scoped>
 .test-container {
@@ -102,68 +177,3 @@
   color: #D05700;
 }
 </style>
-
-<script>
-export default {
-  data() {
-    return {
-      currentQuestion: '',
-      currentAnswer: '',
-      showingAnswer: false,
-      questionAndAnswerHeight: 0
-    };
-  },
-  computed: {
-    transitionDelay() {
-      return this.showingAnswer ? 'transition-delay: 0.25s' : 'transition-delay: 0s; opacity: 0;';
-    }
-  },
-  methods: {
-    showAnswer() {
-      this.showingAnswer = !this.showingAnswer;
-      this.updateHeight();
-    },
-    submitAnswer(isCorrect, isPerfect = false) {
-      console.log(isCorrect, isPerfect);
-      this.getQuestion();
-    },
-    getQuestion() {
-      // データ取得のロジックを追加する
-      this.currentQuestion = 'Sample Question';
-      this.currentAnswer = 'Sample Answer\n\n\najfld;jfldkasj\n\nladsfjkk';
-      this.showingAnswer = false;
-      this.$nextTick(() => {
-        this.questionAndAnswerHeight = this.$refs.content.clientHeight;
-        this.updateHeight();
-      });
-    },
-    updateHeight() {
-      console.log('update');
-      const question = this.$refs.question;
-      const content = this.$refs.content;
-      const originalHeight = content.clientHeight;
-
-      content.style.height = originalHeight + "px";
-      content.offsetHeight; // 強制的にリフローを行い、変更したスタイルが反映されることを保証します
-
-      content.style.transition = "height 0.25s ease";
-      console.log(originalHeight);
-      console.log(question.clientHeight);
-      // TODO テキストのフェードも実装する
-      if (this.showingAnswer) {
-        content.style.height = this.questionAndAnswerHeight + "px";
-        question.style = 'border-bottom: 2px solid #ccc; transition-delay: 0.25s'
-      } else {
-        content.style.transitionDelay = '0.25s';
-        content.style.height = question.clientHeight + "px";
-        question.style = 'border-bottom: 2px solid #cccccc00;'
-
-      }
-    }
-  },
-  mounted() {
-    this.getQuestion();
-  },
-  
-};
-</script>
