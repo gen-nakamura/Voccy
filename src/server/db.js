@@ -14,23 +14,25 @@ CREATE TABLE IF NOT EXISTS flashcards (
     const insertQnASQL = 'INSERT INTO flashcards (question, answer) VALUES (?, ?)';
     const createSettingsSQL = `
     CREATE TABLE IF NOT EXISTS settings (
+      id INTEGER PRIMARY KEY,
       remind_times TEXT,
       remind_nums INTEGER,
-  max_test_nums INTEGER,
-  tiemzone TEXT,
-  CONSTRAINT single_row CHECK ((SELECT COUNT(*) FROM settings) <= 1)
-  )`;
-  const updateQnASQL = `UPDATE flashcards SET question = ?, answer = ? WHERE id = ?`;
-  const recordTestResultSQL = `UPDATE flashcards SET last_result = ?, result = ?, last_test_timestamp = ? WHERE id = ?`;
-  const deleteFlashcardSQL = `DELETE FROM flashcards WHERE id = ?`;
+      max_test_nums INTEGER,
+      timezone TEXT
+  );`
   const updateSettingsSQL = `
   UPDATE settings
   SET remind_times = $remind_times,
       remind_nums = $remind_nums,
       max_test_nums = $max_test_nums,
       timezone = $timezone
-  WHERE id = $id
-`
+  WHERE id = 1`
+  const insertSettingsSQL = `
+INSERT INTO settings (id, remind_times, remind_nums, max_test_nums, timezone)
+VALUES (1, '[07:00, 13:00, 19:00]', 3, 10, 'PDT');`;
+  const updateQnASQL = `UPDATE flashcards SET question = ?, answer = ? WHERE id = ?`;
+  const recordTestResultSQL = `UPDATE flashcards SET last_result = ?, result = ?, last_test_timestamp = ? WHERE id = ?`;
+  const deleteFlashcardSQL = `DELETE FROM flashcards WHERE id = ?`;
   const getSettingsSQL = 'SELECT * FROM settings LIMIT 1';
   const getAllFlashcardsSQL = 'SELECT * FROM flashcards LIMIT ?';
   // TODO - read the F records with some conditions
@@ -39,16 +41,30 @@ CREATE TABLE IF NOT EXISTS flashcards (
 // Settings table
 function createSettingsTable() {
   return new Promise((resolve, reject) => {
-    console.log('createSettingTable');
-      db.run(createSettingsSQL, error => {
-        if (error) {
-          reject(error);
-        } else {
-          console.log('settings table created successfully or it already exists');
-          resolve();
-        }
-      });
+    console.log('createSettingsTable');
+    db.run(createSettingsSQL, error => {
+      if (error) {
+        reject(error);
+      } else {
+        console.log('settings table created successfully or it already exists');
+        resolve();
+      }
     });
+  });
+}
+
+function insertSettingsFirstValue() {
+  return new Promise((resolve, reject) => {
+    console.log('insertSettingsFirstValue');
+    db.run(insertSettingsSQL, error => {
+      if (error) {
+        reject(error);
+      } else {
+        console.log('settings table created successfully or it already exists');
+        resolve();
+      }
+    });
+  });
 }
 
 // needs to be modified→全部この書き方に統一したらわかりやすい説
@@ -92,7 +108,7 @@ function getSettings() {
 function createFlashcardsTable() {
   return new Promise((resolve, reject) => {
     console.log('createFlashcardsTable');
-      db.run(createFlashcardsTable, error => {
+      db.run(createFlashcardsSQL, error => {
         if (error) {
           reject(error);
         } else {
@@ -174,8 +190,9 @@ function deleteFlashcard() {
   async function doSomethingAsync(questionInput, answerInput) {
     console.log('dosomething');
     try {
-      await createFlashcardsTable();
       await createSettingsTable();
+      await insertSettingsFirstValue();
+      await createFlashcardsTable();
       await insertQnA(questionInput, answerInput);
     } catch (error) {
       console.log('catch error in dosth');
