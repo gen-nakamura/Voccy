@@ -29,7 +29,7 @@
   text-align: center;
   position: relative;
   cursor: pointer;
-  transition: height 0.3s ease;
+  transition: height 0.25s ease;
 }
 
 .showing-answer {
@@ -38,7 +38,7 @@
 
 .card {
   background-color: #fff;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.25);
   border-radius: 4px;
   padding: 20px;
 }
@@ -48,16 +48,19 @@
   flex-direction: column;
   align-items: center;
   margin: 0;
-  transition: height 0.3s ease;
+  transition: height 0.25s ease;
 }
 
 .card-content h3 {
   margin: 0;
+  padding: 5px;
   white-space: pre-line;
 }
 
 .question {
   margin-bottom: 20px;
+  /* border-bottom: 2px solid #cccccc00; */
+  transition: 0.25s;
 }
 
 .answer-container {
@@ -68,21 +71,7 @@
 
 .answer {
   font-size: 20px;
-  transition: opacity 0.3s;
-}
-
-.answer-button {
-  margin-top: 10px;
-  padding: 10px 20px;
-  background-color: #4caf50;
-  color: #fff;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-}
-
-.answer-button:hover {
-  background-color: #45a049;
+  transition: opacity 0.25s;
 }
 
 .choices-container {
@@ -126,7 +115,7 @@ export default {
   },
   computed: {
     transitionDelay() {
-      return this.showingAnswer ? 'transition-delay: 0.3s' : 'transition-delay: 0s; opacity: 0;';
+      return this.showingAnswer ? 'transition-delay: 0.25s' : 'transition-delay: 0s; opacity: 0;';
     }
   },
   methods: {
@@ -157,15 +146,18 @@ export default {
       content.style.height = originalHeight + "px";
       content.offsetHeight; // 強制的にリフローを行い、変更したスタイルが反映されることを保証します
 
-      content.style.transition = "height 0.3s ease";
+      content.style.transition = "height 0.25s ease";
       console.log(originalHeight);
       console.log(question.clientHeight);
       // TODO テキストのフェードも実装する
       if (this.showingAnswer) {
         content.style.height = this.questionAndAnswerHeight + "px";
+        question.style = 'border-bottom: 2px solid #ccc; transition-delay: 0.25s'
       } else {
-        content.style.transitionDelay = '0.3s';
+        content.style.transitionDelay = '0.25s';
         content.style.height = question.clientHeight + "px";
+        question.style = 'border-bottom: 2px solid #cccccc00;'
+
       }
     }
   },
