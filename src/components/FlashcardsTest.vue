@@ -59,7 +59,7 @@
 
 .question {
   margin-bottom: 20px;
-  /* border-bottom: 2px solid #cccccc00; */
+  border-bottom: 2px solid #cccccc00; /*transparent*/
   transition: 0.25s;
 }
 
