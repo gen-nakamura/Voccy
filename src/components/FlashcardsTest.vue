@@ -1,4 +1,9 @@
 <template>
+  <div>
+    <div v-if="showingCongratulations" class="congratulations-container">
+      <h1 class="congratulations-text" style="white-space: pre-line;">{{ message }}</h1>
+    </div>
+  </div>
 <div ref="parent" style="opacity: 0; transition: opacity 0.25s;">
   <div class="test-container">
     <div class="card-container">
@@ -22,12 +27,19 @@
 export default {
   data() {
     return {
+      message: 'Congratulations🎊\nYou have finished all the tasks!',
+      showingCongratulations: false,
       currentQuestion: '',
       currentAnswer: '',
+      currentId: null,
       showingAnswer: false,
       questionAndAnswerHeight: 0,
       count: 0,
-      answerList: ['Sample Answer\n\n\najfld;jdsっっっっっっっっっdさあああああああああっffldkasj\n\nladsfjkk', 'adfalkdj;lkajs;ldfa', 'Sample Answer\n\n\najfld;jfldkasj\n\nladsfnswer\n\n\najfld;jfldkasj\n\nladsfjkk']
+      quizSets: [
+        {id: 1,question: 'Sample Question1', answer: 'Sample Answer\n\n\najfld;jdsっっっっっっっっっdさあああああああああっffldkasj\n\nladsfjkk'},
+        {id: 2,question: 'Sample Question2', answer: 'adfalkdj;lkajs;ldfa'},
+        {id: 3,question: 'Sample Question3', answer: 'Sample Answer\n\n\najfld;jfldkasj\n\nladsfnswer\n\n\najfld;jfldkasj\n\nladsfjkk'},
+        ],
     };
   },
   computed: {
@@ -50,10 +62,22 @@ export default {
         this.getQuestion();
       }, 250);
     },
+    allDone() {
+      this.showingCongratulations = true;
+      this.currentAnswer = '';
+      this.currentQuestion = '';
+      this.currentId = null;
+      this.$refs.parent.style = "display: none;";
+    },
     getQuestion() {
       // データ取得のロジックを追加する
-      this.currentQuestion = 'Sample Question';
-      this.currentAnswer = this.answerList[this.count%3];
+      if (this.count >= this.quizSets.length) {
+        this.allDone();
+        return;
+      }
+      this.currentQuestion = this.quizSets[this.count].question;
+      this.currentAnswer = this.quizSets[this.count].answer;
+      this.currentId = this.quizSets[this.count].id;
       this.count++;
       this.showingAnswer = false;
       this.$nextTick(() => {
@@ -178,5 +202,29 @@ export default {
 
 .wrong {
   color: #D05700;
+}
+
+.congratulations-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.congratulations-text {
+  font-size: 32px;
+  font-weight: bold;
+  color: #4caf50;
+  animation: fadeIn 1s ease;
+}
+
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 </style>
