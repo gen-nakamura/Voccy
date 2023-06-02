@@ -1,11 +1,11 @@
 <template>
-<div ref="parent" style="opacity: 0; transition: opacity 0.25s;" class="parent">
+<div ref="parent" style="opacity: 0; transition: opacity 0.25s;">
   <div class="test-container">
     <div class="card-container">
       <div class="card" @click="showAnswer">
         <div class="card-content" ref="content" :key="currentAnswer"> <!-- question idにしたい -->
           <h3 class="question" ref="question">{{ currentQuestion }}</h3>
-          <h3 class="answer" :style="transitionDelay">{{ currentAnswer }}</h3>
+          <h3 class="answer" style="text-align: left;" :style="transitionDelay">{{ currentAnswer }}</h3>
         </div>
       </div>
     </div>
@@ -27,7 +27,7 @@ export default {
       showingAnswer: false,
       questionAndAnswerHeight: 0,
       count: 0,
-      answerList: ['Sample Answer\n\n\najfld;jfldkasj\n\nladsfjkk', 'adfalkdj;lkajs;ldfa', 'Sample Answer\n\n\najfld;jfldkasj\n\nladsfjkkSample Answer\n\n\najfld;jfldkasj\n\nladsfjkk']
+      answerList: ['Sample Answer\n\n\najfld;jdsっっっっっっっっっdさあああああああああっffldkasj\n\nladsfjkk', 'adfalkdj;lkajs;ldfa', 'Sample Answer\n\n\najfld;jfldkasj\n\nladsfnswer\n\n\najfld;jfldkasj\n\nladsfjkk']
     };
   },
   computed: {
@@ -116,6 +116,9 @@ export default {
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.25);
   border-radius: 4px;
   padding: 20px;
+  max-width: 70vw;
+  width: 100%;
+  margin: 0 auto; /* 中央揃えのために必要なマージン設定 */
 }
 
 .card-content {

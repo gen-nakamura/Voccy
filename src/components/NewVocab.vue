@@ -1,5 +1,5 @@
 <template>
-  <div class="form-container">
+  <div class="form-container" ref="parent" style="opacity: 0; transition: opacity 0.25s;">
     <div class="input-block">
       <textarea v-model="questionInput" placeholder="Write a question" class="input-field input-question" :style="{ height: questionInputHeight }" ref="questionInput" @input="adjustQuestionInputHeight"></textarea>
       <button @click="toggleOptions" class="options-button"><i class="fa fa-spinner"></i></button> <!-- add fa-pulse to make it spin -->
@@ -60,6 +60,7 @@ export default {
   mounted() {
     this.$nextTick(() => {
       this.adjustQuestionInputHeight();
+      this.$refs.parent.style = "opacity: 1; transition: opacity 0.25s; transition-delay: 0.5s;"
     });
   }
 };
