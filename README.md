@@ -53,7 +53,7 @@
 - [ ] Show rephrasing or other example sentences when the user presses [ + ]
 - [ ] Submit the vocabulary when you press Command + Shift + Enter.
 
-## Class definitions
+## DB definitions
 - flashcards
   - id
   - question
@@ -62,11 +62,31 @@
   - result
   - last_test_timestamp
 
-## Setting Options
-- remind_times
-- remind_nums
-- max_test_nums
-- timezone
+- settings
+  - remind_times
+  - remind_nums
+  - max_test_nums
+  - timezone
+
+- [ ] when you open the app (app.ready)
+  - [ ] create flashcards
+  - [ ] create settings
+  - [ ] insert first settings value
+  - [ ] set process.env
+- [ ] when you add a new vocab
+  - [ ] insert QnA
+- [ ] when you change the settings
+  - [ ] update settings
+  - [ ] set process.env
+- [ ] when you open the flashcards test
+  - [ ] get quizsets
+- [ ] when you do the test
+  - [ ] record status
+- [ ] when the app notifies you about the test schedule
+- [ ] when you see the list of flashcards
+  - [ ] delete
+  - [ ] update
+  - [ ] 
 
 
 ## TODO
@@ -85,10 +105,12 @@
   - [x] 単語を入力、記憶ができる
   - [x] テスト画面
   - [ ] それぞれのテストについてステータスを記憶できる
+  - [ ] chatGPTの翻訳を最低限
 - [ ] flashcardsのリストを表示できる
   - [ ] 修正
   - [ ] 削除
   - [ ] テストする機能
+- [ ] dbの一括操作
 - [ ] getQuizzes関数で今テストするべきものを取り出す
 - [ ] これらを時間でトリガー発生させる
 - [ ] reminder時間を計算する関数
