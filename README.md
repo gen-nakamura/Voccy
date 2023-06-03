@@ -58,9 +58,10 @@
   - id
   - question
   - answer
-  - last_result
-  - result
-  - last_test_timestamp
+  - previous_result
+  - latest_result
+  - latest_test_timestamp
+  - scheduled_test_timestamp
 
 - settings
   - remind_times
@@ -69,24 +70,29 @@
   - timezone
 
 - [ ] when you open the app (app.ready)
-  - [ ] create flashcards
-  - [ ] create settings
-  - [ ] insert first settings value
-  - [ ] set process.env
+  - [x] create flashcards
+  - [x] create settings
+  - [x] insert first settings value
+  - [x] set process.env
 - [ ] when you add a new vocab
-  - [ ] insert QnA
+  - [x] insert QnA
+  - [ ] update the scheduled test timestamp
 - [ ] when you change the settings
-  - [ ] update settings
-  - [ ] set process.env
+  - [x] update settings
+  - [x] set process.env
+  - [ ] update all the scheduled test timestamp
 - [ ] when you open the flashcards test
   - [ ] get quizsets
-- [ ] when you do the test
-  - [ ] record status
+- [ ] when you take the flashcards test
+  - [x] record status
+  - [ ] update the scheduled test timestamp
 - [ ] when the app notifies you about the test schedule
-- [ ] when you see the list of flashcards
-  - [ ] delete
-  - [ ] update
-  - [ ] 
+- [ ] when you open the list of flashcards
+  - [x] show
+  - [x] delete
+  - [x] update
+    - [ ] update the scheduled test timestamp
+- [ ] when you update the schedule test time
 
 
 ## TODO

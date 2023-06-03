@@ -7,9 +7,10 @@ CREATE TABLE IF NOT EXISTS flashcards (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
   question TEXT,
     answer TEXT,
-    last_result TEXT,
+    previous_result TEXT,
     result TEXT,
-    last_test_timestamp TEXT
+    latest_test_timestamp TEXT,
+    scheduled_test_timestamp TEXT
     )`;
     const insertQnASQL = 'INSERT INTO flashcards (question, answer) VALUES (?, ?)';
     const createSettingsSQL = `
@@ -30,12 +31,20 @@ CREATE TABLE IF NOT EXISTS flashcards (
   const insertSettingsSQL = `
 INSERT INTO settings (id, remind_times, remind_nums, max_test_nums, timezone)
 VALUES (1, '[07:00, 13:00, 19:00]', 3, 10, 'PDT');`;
-  const updateQnASQL = `UPDATE flashcards SET question = ?, answer = ? WHERE id = ?`;
-  const recordTestResultSQL = `UPDATE flashcards SET last_result = ?, result = ?, last_test_timestamp = ? WHERE id = ?`;
+  const updateFlashcardSQL = `
+  UPDATE flashcards
+  SET question = $question, answer = $answer, previous_result = $previous_result, latest_result = $latest_result, latest_test_timestamp = $latest_test_timestamp, scheduled_test_timestamp = $scheduled_test_timestamp
+  WHERE id = $id
+`;
+const recordTestResultsSQL = `
+  UPDATE flashcards
+  SET previous_result = $previous_result, latest_result = $latest_result, latest_test_timestamp = $latest_test_timestamp
+  WHERE id = $id
+`;
   const deleteFlashcardSQL = `DELETE FROM flashcards WHERE id = ?`;
-  const getSettingsSQL = 'SELECT * FROM settings LIMIT 1';
+  const getSettingsSQL = 'SELECT * FROM settings WHERE id = 1';
   const getAllFlashcardsSQL = 'SELECT * FROM flashcards LIMIT ?';
-  // TODO - read the F records with some conditions
+  const getQuizSetsSQL = createGetQuizSetsSQL();
   // TODO - change status of a record
   
 // Settings table
@@ -60,45 +69,35 @@ function insertSettingsFirstValue() {
       if (error) {
         reject(error);
       } else {
-        console.log('settings table created successfully or it already exists');
+        console.log('inserted settings first value successfully');
         resolve();
       }
     });
   });
 }
-
-// needs to be modified→全部この書き方に統一したらわかりやすい説
-// const params = {
-//   $remind_times: remindTimes,
-//   $remind_nums: remindNums,
-//   $max_test_nums: maxTestNums,
-//   $timezone: timezone,
-//   $id: id
-// };
-
-function updateSettings() {
+function updateSettings(settings) {
   return new Promise((resolve, reject) => {
-    console.log('createSettingTable');
-      db.run(updateSettingsSQL, params, error => {
+    console.log('updateSettings');
+      db.run(updateSettingsSQL, settings, error => {
         if (error) {
           reject(error);
         } else {
-          console.log('settings table created successfully or it already exists');
+          console.log('updated settings successfully');
           resolve();
         }
       });
     });
 }
-// needs to be modified
+
 function getSettings() {
   return new Promise((resolve, reject) => {
-    console.log('get settings');
-    db.run(getSettingsSQL, error => {
-      if (error) {
+    console.log('getSettings');
+    db.get(getSettingsSQL, function(error, data) {
+      if (error || data === undefined) {
         reject(error);
       } else {
-        console.log();
-        resolve();
+        console.log('got settings successfully');
+        resolve(data);
       }
     })
   })
@@ -118,52 +117,67 @@ function createFlashcardsTable() {
       });
     });
   }
-// needs to be modified
-function getAllFlashcards() {
+
+function getAllFlashcards(limit) {
   return new Promise((resolve, reject) => {
     console.log('createFlashcardsTable');
-      db.run(getAllFlashcardsSQL, error => {
-        if (error) {
+      db.all(getAllFlashcardsSQL, [limit], function(error, data) {
+        if (error || data.length === 0) {
           reject(error);
         } else {
-          console.log('flashcards table created successfully or it already exists');
-          resolve();
+          console.log('got all the flashcards successfully');
+          resolve(data);
         }
       });
     });
 }
   
-function insertQnA(questionInput, answerInput) {
+function insertQnA(question, answer) {
   console.log('InsertQnA');
   return new Promise((resolve, reject) => {
-    db.run(insertQnASQL, [questionInput, answerInput], error => {
+    db.run(insertQnASQL, [question, answer], error => {
       if (error) {
         reject(error);
       } else {
-        console.log('inserted successfully');
+        console.log('inserted QnA successfully');
         resolve();
       }
     });
   })
 }
-// needs to be modified
-function updateQnA() {
+
+function updateFlashcard(flashcard) {
   return new Promise((resolve, reject) => {
-    console.log('updateQnA');
-      db.run(updateQnASQL, error => {
+    console.log('updateFlashcard');
+    db.run(updateFlashcardSQL, flashcard, error => {
+      if (error) {
+        reject(error);
+      } else {
+        console.log('updated flashcard successfully');
+        resolve();
+      }
+    });
+  });
+}
+
+function recordTestResults(testRecords) {
+  return new Promise((resolve, reject) => {
+    console.log('recordTestResult');
+      db.run(recordTestResultsSQL, testRecords, error => {
         if (error) {
           reject(error);
         } else {
+          console.log('recorded test results successfully')
           resolve();
         }
       });
     });
-  }
-// needs to be modified
-function recordTestResult() {
+}
+
+function deleteFlashcard(id) {
   return new Promise((resolve, reject) => {
-    console.log('recordTestResult');
-      db.run(recordTestResultSQL, error => {
+    console.log('deleteFlashCard');
+      db.run(deleteFlashcardSQL, id, error => {
         if (error) {
           reject(error);
         } else {
@@ -172,33 +186,114 @@ function recordTestResult() {
       });
     });
 }
-// needs to be modified
-function deleteFlashcard() {
-  return new Promise((resolve, reject) => {
-    console.log('recordTestResult');
-      db.run(deleteFlashcardSQL, error => {
-        if (error) {
-          reject(error);
-        } else {
-          resolve();
-        }
-      });
-    });
+
+function updateTheScheduledTestTimestamp(id) {
+
+}
+
+async function setSettingsValueToProcessEnv() {
+  const data = await getSettings();
+  Object.assign(process.env, data);
 }
   
   // async/awaitを使用して非同期処理を扱う
-  async function doSomethingAsync(questionInput, answerInput) {
+  async function doSomethingAsync(question, answer) {
     console.log('dosomething');
     try {
       await createSettingsTable();
       await insertSettingsFirstValue();
       await createFlashcardsTable();
-      await insertQnA(questionInput, answerInput);
+      await insertQnA(question, answer);
     } catch (error) {
       console.log('catch error in dosth');
       throw new Error(error);
     }
   }
 
+  async function openTheApp() {
+    console.log('open the app');
+    try {
+      await createSettingsTable();
+      await insertSettingsFirstValue();
+      await createFlashcardsTable();
+      await setSettingsValueToProcessEnv();
+    } catch (error) {
+      console.log('catch error in openTheApp');
+      throw new Error(error);
+    }
+  }
+
+  async function addANewVocab(question, answer) {
+    console.log('add a new vocab');
+    try {
+      await insertQnA(question, answer);
+    } catch (error) {
+      console.log('catch error in addNewVocab');
+      throw new Error(error);
+    }
+  }
+
+  async function changeTheSettings(settings) {
+    console.log('change the settings');
+    try {
+      await updateSettings(settings);
+      await setSettingsValueToProcessEnv();
+    } catch (error) {
+      console.log('catch error in cahngeTheSettings');
+      throw new Error(error);
+    }
+  }
+
+  async function openTheFlashcardsTest() {
+    console.log('open the flashcards test');
+    try {
+      const data = a;
+      return data;
+    } catch (error) {
+      console.log('catch error in openTheFlashcardsTest');
+      throw new Error(error);
+    }
+  }
+  
+  async function takeTheFlachcardsTest(testRecords) {
+    console.log('take the flashcards test');
+    try {
+      await recordTestResults(testRecords);
+    } catch (error) {
+      console.log('catch error in takeTheFlashcardsTest');
+      throw new Error(error);
+    }
+  }
+  
+  async function openTheListOfFlashcards(limit) {
+    console.log('open the list of flashcards');
+    try {
+      const data = await getAllFlashcards(limit);
+      return data;
+    } catch (error) {
+      console.log('catch error in openTheListOfFlashcards');
+      throw new Error(error);
+    }
+  }
+
+  async function deleteTheFlashcard(id) {
+    console.log('delete the flashcard');
+    try {
+      deleteFlashcard(id);
+    } catch (error) {
+      console.log('catch error in deleteTheFlashcard');
+      throw new Error(error);
+    }
+  }
+  
+  async function updateTheFlashcard(flashcard) {
+    console.log('update the flashcard');
+    try {
+      updateFlashcard(flashcard);
+    } catch (error) {
+      console.log('catch error in updateTheFlashcard');
+      throw new Error(error);
+    }
+  }
   export { doSomethingAsync }
 
