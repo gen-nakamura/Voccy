@@ -1,6 +1,7 @@
 const sqlite3 = require('sqlite3').verbose();
 const dbPath = './voccy.db'; // SQLiteデータベースファイルのパス
 const db = new sqlite3.Database(dbPath);
+import { calculateNextTestTimestamp } from './logic';
 
 const createFlashcardsSQL = `
 CREATE TABLE IF NOT EXISTS flashcards (
@@ -33,7 +34,12 @@ INSERT INTO settings (id, remind_times, remind_nums, max_test_nums, timezone)
 VALUES (1, '[07:00, 13:00, 19:00]', 3, 10, 'PDT');`;
   const updateFlashcardSQL = `
   UPDATE flashcards
-  SET question = $question, answer = $answer, previous_result = $previous_result, latest_result = $latest_result, latest_test_timestamp = $latest_test_timestamp, scheduled_test_timestamp = $scheduled_test_timestamp
+  SET question = $question,
+  answer = $answer,
+  previous_result = $previous_result,
+  latest_result = $latest_result,
+  latest_test_timestamp = $latest_test_timestamp,
+  scheduled_test_timestamp = $scheduled_test_timestamp
   WHERE id = $id
 `;
 const recordTestResultsSQL = `
@@ -44,8 +50,7 @@ const recordTestResultsSQL = `
   const deleteFlashcardSQL = `DELETE FROM flashcards WHERE id = ?`;
   const getSettingsSQL = 'SELECT * FROM settings WHERE id = 1';
   const getAllFlashcardsSQL = 'SELECT * FROM flashcards LIMIT ?';
-  const getQuizSetsSQL = createGetQuizSetsSQL();
-  // TODO - change status of a record
+  const getQuizSetsSQL = 'SELECT * FROM flashcards ORDER BY datetime(scheduled_test_timestamp) ASC LIMIT ?;';
   
 // Settings table
 function createSettingsTable() {
@@ -135,12 +140,12 @@ function getAllFlashcards(limit) {
 function insertQnA(question, answer) {
   console.log('InsertQnA');
   return new Promise((resolve, reject) => {
-    db.run(insertQnASQL, [question, answer], error => {
+    db.get(insertQnASQL, [question, answer], function (error, data) {
       if (error) {
         reject(error);
       } else {
         console.log('inserted QnA successfully');
-        resolve();
+        resolve(data);
       }
     });
   })
@@ -163,12 +168,12 @@ function updateFlashcard(flashcard) {
 function recordTestResults(testRecords) {
   return new Promise((resolve, reject) => {
     console.log('recordTestResult');
-      db.run(recordTestResultsSQL, testRecords, error => {
+      db.get(recordTestResultsSQL, testRecords, function (error, data) {
         if (error) {
           reject(error);
         } else {
           console.log('recorded test results successfully')
-          resolve();
+          resolve(data);
         }
       });
     });
@@ -176,19 +181,58 @@ function recordTestResults(testRecords) {
 
 function deleteFlashcard(id) {
   return new Promise((resolve, reject) => {
-    console.log('deleteFlashCard');
-      db.run(deleteFlashcardSQL, id, error => {
+  console.log('deleteFlashCard');
+    db.run(deleteFlashcardSQL, [id], error => {
+      if (error) {
+        reject(error);
+      } else {
+        resolve();
+      }
+    });
+  });
+}
+
+function getQuizSets() {
+  return new Promise((resolve, reject) => {
+  console.log('getQuizSets');
+    db.get(getQuizSetsSQL, function(error, data) {
+      if (error) {
+        reject(error);
+      } else {
+        resolve(data);
+      }
+    });
+  });
+}
+
+async function updateAllTheScheduledTestTimestamp() {
+  const flashcards = await getAllFlashcards(null);
+  return new Promise((resolve, reject) => {
+  console.log('updateAllTheScheduledTestTimestamp');  
+  db.serialize(() => {
+    db.run('BEGIN TRANSACTION');
+  
+    flashcards.forEach(flashcard => {
+      db.run(updateFlashcardSQL, flashcard, error => {
         if (error) {
-          reject(error);
+          console.error(error);
         } else {
-          resolve();
+          // console.log('updated flashcard successfully');
         }
       });
     });
-}
-
-function updateTheScheduledTestTimestamp(id) {
-
+  
+    db.run('COMMIT', [], err => {
+      if (err) {
+        reject(err);
+        console.error(err);
+        return;
+      }
+      console.log('All records updated successfully.');
+      resolve();
+    });
+  });
+  });
 }
 
 async function setSettingsValueToProcessEnv() {
@@ -226,7 +270,9 @@ async function setSettingsValueToProcessEnv() {
   async function addANewVocab(question, answer) {
     console.log('add a new vocab');
     try {
-      await insertQnA(question, answer);
+      const flashcard = await insertQnA(question, answer);
+      const newFlashcard = calculateNextTestTimestamp(flashcard);
+      await updateFlashcard(newFlashcard);
     } catch (error) {
       console.log('catch error in addNewVocab');
       throw new Error(error);
@@ -238,6 +284,7 @@ async function setSettingsValueToProcessEnv() {
     try {
       await updateSettings(settings);
       await setSettingsValueToProcessEnv();
+      await updateAllTheScheduledTestTimestamp();
     } catch (error) {
       console.log('catch error in cahngeTheSettings');
       throw new Error(error);
@@ -247,7 +294,7 @@ async function setSettingsValueToProcessEnv() {
   async function openTheFlashcardsTest() {
     console.log('open the flashcards test');
     try {
-      const data = a;
+      const data = await getQuizSets();
       return data;
     } catch (error) {
       console.log('catch error in openTheFlashcardsTest');
@@ -258,7 +305,9 @@ async function setSettingsValueToProcessEnv() {
   async function takeTheFlachcardsTest(testRecords) {
     console.log('take the flashcards test');
     try {
-      await recordTestResults(testRecords);
+      const flashcard = await recordTestResults(testRecords);
+      const newFlashcard = calculateNextTestTimestamp(flashcard);
+      await updateFlashcard(newFlashcard);
     } catch (error) {
       console.log('catch error in takeTheFlashcardsTest');
       throw new Error(error);

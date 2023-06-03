@@ -76,22 +76,21 @@
   - [x] set process.env
 - [ ] when you add a new vocab
   - [x] insert QnA
-  - [ ] update the scheduled test timestamp
+  - [x] update the scheduled test timestamp
 - [ ] when you change the settings
   - [x] update settings
   - [x] set process.env
-  - [ ] update all the scheduled test timestamp
+  - [x] update all the scheduled test timestamp
 - [ ] when you open the flashcards test
   - [ ] get quizsets
 - [ ] when you take the flashcards test
   - [x] record status
-  - [ ] update the scheduled test timestamp
+  - [x] update the scheduled test timestamp
 - [ ] when the app notifies you about the test schedule
 - [ ] when you open the list of flashcards
   - [x] show
   - [x] delete
   - [x] update
-    - [ ] update the scheduled test timestamp
 - [ ] when you update the schedule test time
 
 
@@ -123,6 +122,7 @@
   - [ ] configがアップデートされる度に呼び出す
   - [ ] 時間トリガーも変更する
 - [ ] 名詞を画像と一緒に覚える
+- [ ] どのくらいやったかの記録、時間帯の判定
 - [ ] アウトプットも大事だけどこのアプリで主に担うのはインプットの補助。アウトプット学習は日常から工夫することで補いたい
 
 - [ ] download the app, initialize
