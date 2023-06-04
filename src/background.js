@@ -5,6 +5,7 @@ import { createProtocol } from 'vue-cli-plugin-electron-builder/lib'
 import installExtension, { VUEJS3_DEVTOOLS } from 'electron-devtools-installer'
 const isDevelopment = process.env.NODE_ENV !== 'production'
 import { createServer } from './server/server'
+import axios from 'axios'
 
 // Scheme must be registered before the app is ready
 protocol.registerSchemesAsPrivileged([
@@ -67,6 +68,16 @@ app.on('ready', async () => {
   server.listen(3000, () => {
     console.log('Server running on port 3000');
   });
+
+  axios.post('http://localhost:3000/api/open_app')
+  .then(response => {
+    console.log('open_app, res: ', response.status, response.statusText);
+  })
+  .catch(error => {
+    // エラーレスポンスの処理
+    console.error('Error in request:', error);
+  });
+
   createWindow()
 })
 

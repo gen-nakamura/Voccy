@@ -38,8 +38,8 @@ export default {
   methods: {
     saveData() {
       const data = {
-        questionInput: this.questionInput,
-        answerInput: this.answerInput
+        question: this.questionInput,
+        answer: this.answerInput
       };
 
       axios.post('http://localhost:3000/api/data', data)

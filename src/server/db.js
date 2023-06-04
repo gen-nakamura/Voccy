@@ -29,8 +29,8 @@ CREATE TABLE IF NOT EXISTS flashcards (
       max_test_nums = $max_test_nums
   WHERE id = 1`
   const insertSettingsSQL = `
-INSERT INTO settings (id, remind_times, remind_nums, max_test_nums)
-VALUES (1, '[07:00, 13:00, 19:00]', 3, 10);`;
+  INSERT OR IGNORE INTO settings (id, remind_times, remind_nums, max_test_nums)
+  VALUES (1, '[07:00, 13:00, 19:00]', 3, 10);`;
   const updateFlashcardSQL = `
   UPDATE flashcards
   SET question = $question,
@@ -388,7 +388,7 @@ function startTest() {
   });
 }
 
-  export { startTest }
+  export { openTheApp, addANewVocab, updateFlashcard, changeTheSettings, openTheFlashcardsTest, takeTheFlachcardsTest, openTheListOfFlashcards, deleteFlashcard }
 
 // serverで確かめる。テストデータを用意する
 // chatGPTに任せる。前後をわかりやすく出力させる
