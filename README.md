@@ -4,17 +4,32 @@
 
 ## User Stories
 ### You can ask question like this (The answer will be created with ChatGPT API)
-`Input: An English sentence, phrase or word.`
-- [ ] Rephrase it.
+`Input: An English phrase or word.`
+- [ ] All in one:
+  - [x] Rephrase it.
+  - [x] Give some example sentences
+- [x] definition
+
+
+`Input: An English sentence`
+- [ ] All in one
+  - [x] Does it sound natural?
+  - [x] Is it correct in grammar?
+  - [x] Rephrase it.
+
+- [ ] これはどういう意味、用法が使われてる？ respond in
+  - [ ] English
+  - [ ] Japanese
+
+
+`Input: A Japanese sentence, phrase or word.`
 - [ ] How can I say this in English?
-- [ ] Does it sound natural?
-- [ ] Is it correct in grammar?
-- [ ] これはどういう意味、用法が使われてる？
 
 `Input: An English sentence and the specific word or phrase inside. (In case you want to understand how to use a word in a certain context.)`
 - [ ] What does this word/phrase mean in this sentence?
   - [ ] give some example sentences that the word/phrase is used in similar way.
 - [ ] この文章でのこの単語/連語はどういう意味？
+  - [ ] その他の例文
 
 `Input: Some specific situation you face.`
 - [ ] こんな時英語でなんて言う？
@@ -143,6 +158,8 @@
   - [ ] doneと同時にノルマステータスを削除
   - [ ] Congratulationsにいつの分が終わったのが記載する
 - [ ] doneのステータス
+- [ ] 一覧で編集可能にする設定画面
+- [ ] カード学習で戻る機能
 
 - [ ] download the app, initialize
 - [ ] update settings
