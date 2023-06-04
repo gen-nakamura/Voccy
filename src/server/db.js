@@ -1,37 +1,36 @@
 const sqlite3 = require('sqlite3').verbose();
 const dbPath = './voccy.db'; // SQLiteデータベースファイルのパス
 const db = new sqlite3.Database(dbPath);
-import { calculateNextTestTimestamp } from './logic';
+import { calculateNextTestTimestamp, formatDateNow, convertToBindParameters } from './logic';
+import { testFunction } from './test';
 
 const createFlashcardsSQL = `
 CREATE TABLE IF NOT EXISTS flashcards (
-  id INTEGER PRIMARY KEY AUTOINCREMENT,
-  question TEXT,
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    question TEXT,
     answer TEXT,
     previous_result TEXT,
-    result TEXT,
+    latest_result TEXT,
     latest_test_timestamp TEXT,
     scheduled_test_timestamp TEXT
     )`;
-    const insertQnASQL = 'INSERT INTO flashcards (question, answer) VALUES (?, ?)';
+    const insertQnASQL = 'INSERT INTO flashcards (question, answer, latest_test_timestamp) VALUES (?, ?, ?)';
     const createSettingsSQL = `
     CREATE TABLE IF NOT EXISTS settings (
       id INTEGER PRIMARY KEY,
       remind_times TEXT,
       remind_nums INTEGER,
-      max_test_nums INTEGER,
-      timezone TEXT
+      max_test_nums INTEGER
   );`
   const updateSettingsSQL = `
   UPDATE settings
   SET remind_times = $remind_times,
       remind_nums = $remind_nums,
-      max_test_nums = $max_test_nums,
-      timezone = $timezone
+      max_test_nums = $max_test_nums
   WHERE id = 1`
   const insertSettingsSQL = `
-INSERT INTO settings (id, remind_times, remind_nums, max_test_nums, timezone)
-VALUES (1, '[07:00, 13:00, 19:00]', 3, 10, 'PDT');`;
+INSERT INTO settings (id, remind_times, remind_nums, max_test_nums)
+VALUES (1, '[07:00, 13:00, 19:00]', 3, 10);`;
   const updateFlashcardSQL = `
   UPDATE flashcards
   SET question = $question,
@@ -50,7 +49,8 @@ const recordTestResultsSQL = `
   const deleteFlashcardSQL = `DELETE FROM flashcards WHERE id = ?`;
   const getSettingsSQL = 'SELECT * FROM settings WHERE id = 1';
   const getAllFlashcardsSQL = 'SELECT * FROM flashcards LIMIT ?';
-  const getQuizSetsSQL = 'SELECT * FROM flashcards ORDER BY datetime(scheduled_test_timestamp) ASC LIMIT ?;';
+  const getQuizSetsSQL = 'SELECT * FROM tableName WHERE scheduled_test_timestamp IS NOT NULL ORDER BY datetime(scheduled_test_timestamp) ASC LIMIT ?;';
+  const getFlashcardSQL = 'SELECT * FROM flashcards WHERE id = ?';
   
 // Settings table
 function createSettingsTable() {
@@ -83,7 +83,7 @@ function insertSettingsFirstValue() {
 function updateSettings(settings) {
   return new Promise((resolve, reject) => {
     console.log('updateSettings');
-      db.run(updateSettingsSQL, settings, error => {
+      db.run(updateSettingsSQL, convertToBindParameters(settings), error => {
         if (error) {
           reject(error);
         } else {
@@ -123,6 +123,18 @@ function createFlashcardsTable() {
     });
   }
 
+function getSinglsFlashcard(id) {
+  return new Promise((resolve, reject) => {
+    db.get(getFlashcardSQL, [id], function(error, row) {
+      if (error) {
+        console.error('Error retrieving inserted record:', error);
+        reject(error);
+      }
+      resolve(row);
+    });
+  })
+}
+
 function getAllFlashcards(limit) {
   return new Promise((resolve, reject) => {
     console.log('createFlashcardsTable');
@@ -140,11 +152,12 @@ function getAllFlashcards(limit) {
 function insertQnA(question, answer) {
   console.log('InsertQnA');
   return new Promise((resolve, reject) => {
-    db.get(insertQnASQL, [question, answer], function (error, data) {
+    db.run(insertQnASQL, [question, answer, formatDateNow()], async function (error) {
       if (error) {
         reject(error);
       } else {
         console.log('inserted QnA successfully');
+        const data = await getSinglsFlashcard(this.lastID);
         resolve(data);
       }
     });
@@ -154,7 +167,7 @@ function insertQnA(question, answer) {
 function updateFlashcard(flashcard) {
   return new Promise((resolve, reject) => {
     console.log('updateFlashcard');
-    db.run(updateFlashcardSQL, flashcard, error => {
+    db.run(updateFlashcardSQL, convertToBindParameters(flashcard), error => {
       if (error) {
         reject(error);
       } else {
@@ -168,11 +181,12 @@ function updateFlashcard(flashcard) {
 function recordTestResults(testRecords) {
   return new Promise((resolve, reject) => {
     console.log('recordTestResult');
-      db.get(recordTestResultsSQL, testRecords, function (error, data) {
+      db.run(recordTestResultsSQL, convertToBindParameters(testRecords), async function (error) {
         if (error) {
           reject(error);
         } else {
-          console.log('recorded test results successfully')
+          console.log('recorded test results successfully');
+          const data = await getSinglsFlashcard(this.lastID);
           resolve(data);
         }
       });
@@ -213,7 +227,7 @@ async function updateAllTheScheduledTestTimestamp() {
     db.run('BEGIN TRANSACTION');
   
     flashcards.forEach(flashcard => {
-      db.run(updateFlashcardSQL, flashcard, error => {
+      db.run(updateFlashcardSQL, convertToBindParameters(flashcard), error => {
         if (error) {
           console.error(error);
         } else {
@@ -238,6 +252,7 @@ async function updateAllTheScheduledTestTimestamp() {
 async function setSettingsValueToProcessEnv() {
   const data = await getSettings();
   Object.assign(process.env, data);
+  console.log('set settings value to the process successfully');
 }
   
   // async/awaitを使用して非同期処理を扱う
@@ -274,7 +289,7 @@ async function setSettingsValueToProcessEnv() {
       const newFlashcard = calculateNextTestTimestamp(flashcard);
       await updateFlashcard(newFlashcard);
     } catch (error) {
-      console.log('catch error in addNewVocab');
+      console.log('catch error in addANewVocab');
       throw new Error(error);
     }
   }
@@ -344,5 +359,34 @@ async function setSettingsValueToProcessEnv() {
       throw new Error(error);
     }
   }
-  export { doSomethingAsync }
+function startTest() {
+  db.run('DROP TABLE IF EXISTS settings;', err => {
+    db.run('DROP TABLE IF EXISTS flashcards;', async err => {
+      try {
+        await testFunction(db, openTheApp);
+        await testFunction(db, addANewVocab, 'testQuestion1', 'testAnswer1');
+        await testFunction(db, addANewVocab, 'testQuestion2', 'testAnswer2');
+        await testFunction(db, addANewVocab, 'testQuestion3', 'testAnswer3');
+        await testFunction(db, addANewVocab, 'testQuestion4', 'testAnswer4');
+        await testFunction(db, addANewVocab, 'testQuestion5', 'testAnswer5');
+        await testFunction(db, addANewVocab, 'testQuestion6', 'testAnswer6');
+        await testFunction(db, updateTheFlashcard, {id: 1, question: 'updatedQuestion', answer: 'updatedAnswer', previous_result: 'cross', latest_result: 'circle', latest_test_timestamp: '2023-06-03 17:51', scheduled_test_timestamp: '2023-06-03 19:00'});
+        await testFunction(db, changeTheSettings, {id: 1, remind_times: '[07:00, 13:00, 19:00]', remind_nums: 3, max_test_nums: 10});
+        await testFunction(db, openTheFlashcardsTest);
+        await testFunction(db, takeTheFlachcardsTest, {previous_result: 'circle', latest_result: 'check', latest_test_timestamp: formatDateNow()});
+        await testFunction(db, openTheListOfFlashcards, 5);
+        await testFunction(db, deleteTheFlashcard, 1);
+        await logFlashcardsTable(db);
+        await logSettingsTable(db);
+      } catch(e) {
+        console.log('caught error in test');
+        console.error(e);
+      }
+    });
+  });
+}
 
+  export { startTest }
+
+// serverで確かめる。テストデータを用意する
+// chatGPTに任せる。前後をわかりやすく出力させる

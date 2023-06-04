@@ -1,4 +1,4 @@
-import { doSomethingAsync } from './db';
+import { doSomethingAsync, startTest } from './db';
 const express = require('express');
 const sqlite3 = require('sqlite3').verbose();
 
@@ -20,7 +20,7 @@ export function createServer() {
         console.log('get a post request');
         const { questionInput, answerInput } = req.body;
         try {
-            await doSomethingAsync(questionInput, answerInput);
+            await startTest();
             res.json({ success: true });
         } catch (error) {
             console.log('error in db operation: ', error);

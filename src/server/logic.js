@@ -70,9 +70,13 @@ function calcFromResult(previous_result, latest_result) {
 
 import moment from 'moment';
 
-function addDate(timestamp, days) {
-    const latest_test_timestamp = moment(timestamp, 'YYYY-MM-DD HH:mm').toDate();
-    return resultDate = moment(latest_test_timestamp).add(days, 'days').toDate().format('YYYY-MM-DD HH:mm');
+export function formatDateNow() {
+    return moment().format('YYYY-MM-DD HH:mm').toString();
+}
+
+function addDate(date, days) {
+  const resultDate = moment(date, 'YYYY-MM-DD HH:mm').add(days, 'days').format('YYYY-MM-DD HH:mm');
+  return resultDate;
 }
 
 function getRandomInterval(days) {
@@ -88,32 +92,13 @@ export function calculateNextTestTimestamp(data) {
     return data;
 }
 
-// paramsを与えるとparamsごと帰ってくる関数にして、それをそのままぶちこんだ方がいいか
-
-const ids = [1, 4, 5, 6, 7];
-const values = ['value1', 'value2', 'value3', 'value4', 'value5'];
-
-// クエリの構築
-const placeholders = ids.map(() => '?').join(',');
-const updateQuery = `
-  UPDATE flashcards
-  SET result = CASE id
-    ${ids.map((id, index) => `WHEN ? THEN ?`).join(' ')}
-    END
-  WHERE id IN (${placeholders})
-`;
-
-// プレースホルダーの値を展開
-const params = ids.reduce((acc, id, index) => [...acc, id, values[index]], []);
-
-// クエリの実行
-db.run(updateQuery, params, function(error) {
-  if (error) {
-    console.error('Error updating records:', error);
-  } else {
-    console.log('Records updated successfully');
+export function convertToBindParameters(obj) {
+    const bindParameters = {};
+    for (const key in obj) {
+      bindParameters['$' + key] = obj[key];
+    }
+    return bindParameters;
   }
-});
 
 // getFlashcardっていう一つだけ取り出す関数が必要かもしれない
 // タイムスタンプのupdateについて、全てやる場合と一つだけやる場合。引数はidだけになりそう？

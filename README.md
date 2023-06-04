@@ -64,10 +64,10 @@
   - scheduled_test_timestamp
 
 - settings
+  - id
   - remind_times
   - remind_nums
   - max_test_nums
-  - timezone
 
 - [ ] when you open the app (app.ready)
   - [x] create flashcards
@@ -124,6 +124,12 @@
 - [ ] 名詞を画像と一緒に覚える
 - [ ] どのくらいやったかの記録、時間帯の判定
 - [ ] アウトプットも大事だけどこのアプリで主に担うのはインプットの補助。アウトプット学習は日常から工夫することで補いたい
+- [ ] ノルマクリアのステータス
+  - [ ] 通知と同時にその時間をバツにする
+  - [ ] バツが複数ある時に警告（スキップorやる）
+  - [ ] doneと同時にノルマステータスを削除
+  - [ ] Congratulationsにいつの分が終わったのが記載する
+- [ ] doneのステータス
 
 - [ ] download the app, initialize
 - [ ] update settings
