@@ -2,9 +2,14 @@
   <div class="form-container" ref="parent" style="opacity: 0; transition: opacity 0.25s;">
     <div class="input-block">
       <textarea v-model="questionInput" placeholder="Write a question" class="input-field input-question" :style="{ height: questionInputHeight }" ref="questionInput" @input="adjustQuestionInputHeight"></textarea>
-      <button @click="toggleOptions" ref="optionsMenu" class="options-button"><i class="fa fa-spinner"></i></button> <!-- add fa-pulse to make it spin -->
+      <button @click="toggleOptions" ref="optionsMenu" class="options-button">
+        <i class="fa fa-spinner" :class="{'fa-spin': waitForResponse}"></i><!-- add fa-pulse to make it spin -->
+      </button>
       <div v-if="showOptions" class="options-menu">
-        <!-- オプションメニューの内容を追加 -->
+        <ul>
+          <li tabindex="0" v-for="(option, index) in options" :key="index" 
+          @keydown.enter="selectOption(index)">{{ option }}</li>
+        </ul>
       </div>
     </div>
     <div class="input-block">
@@ -16,18 +21,18 @@
 
 <script>
 import axios from 'axios';
+import { createCompletion } from '@/server/api';
 
 export default {
   name: 'NewVocab',
-  props: {
-    msg: String
-  },
   data() {
     return {
       questionInput: 'sampleQuestion',
       answerInput: 'sampleAnswer',
       questionInputHeight: 'auto',
-      showOptions: false
+      showOptions: false,
+      waitForResponse: false,
+      options: ['new_word', 'word_usage', 'sentence_rephrase', 'これは英語で？', 'if_native'],
     };
   },
   methods: {
@@ -57,11 +62,19 @@ export default {
       }
     },
     handleGlobalClick(event) {
-      // クリックされた要素がオプションメニューでない場合に showOptions を false に設定する
       const optionsMenu = this.$refs.optionsMenu;
       if (!optionsMenu.contains(event.target)) {
         this.showOptions = false;
       }
+    },
+    async selectOption(index) {
+      // 選択されたオプションの処理を追加
+      console.log('Option selected:', this.options[index]);
+      this.waitForResponse = true;
+      const text = await createCompletion(this.options[index], this.questionInput);
+
+      this.waitForResponse = false;
+      this.answerInput = text.trimLeft();
     },
   },
   mounted() {
@@ -133,6 +146,15 @@ export default {
   background-color: transparent;
   border: none;
   cursor: pointer;
+  font-size: 16px;
+}
+
+.options-button i {
+  color: #333;
+}
+
+.options-button i.fa-pulse {
+  animation: spin 1s infinite linear;
 }
 
 .options-menu {
@@ -146,5 +168,21 @@ export default {
   padding: 10px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
   z-index: 10;
+}
+
+.options-menu ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.options-menu li {
+  padding: 5px 0;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.options-menu li:hover {
+  background-color: #f7f7f7;
 }
 </style>
