@@ -172,7 +172,7 @@ export default {
 }
 
 .answer {
-  font-size: 20px;
+  font-size: 16px;
   transition: opacity 0.25s;
 }
 
