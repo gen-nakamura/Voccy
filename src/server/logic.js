@@ -1,7 +1,7 @@
 // the function returns which flashcards_id to be the one you need to do.
 // ordered by a schedule test time, then return first 5 elements.
 // 変更されたレコードに対して、settingsが変わった時に全体に対して
-const NULL_NULL     = null;
+const NULL_NULL     = 1;
 const NULL_CROSS    = 1;
 const NULL_CIRCLE   = 1.5;
 const NULL_CHECK    = 7;
@@ -22,8 +22,9 @@ const CHECK_CIRCLE  = 3;
 const CHECK_CHECK   = 30;
 
 function calcFromResult(previous_result, latest_result) {
-    if (previous_result === 'null') {
-      if (latest_result === 'null') {
+    if (latest_result === 'done') return null;
+    if (previous_result === null) {
+      if (latest_result === null) {
         return NULL_NULL;
       } else if (latest_result === 'cross') {
         return NULL_CROSS;
@@ -33,7 +34,7 @@ function calcFromResult(previous_result, latest_result) {
         return NULL_CHECK;
       }
     } else if (previous_result === 'cross') {
-      if (latest_result === 'null') {
+      if (latest_result === null) {
         return CROSS_NULL;
       } else if (latest_result === 'cross') {
         return CROSS_CROSS;
@@ -43,7 +44,7 @@ function calcFromResult(previous_result, latest_result) {
         return CROSS_CHECK;
       }
     } else if (previous_result === 'circle') {
-      if (latest_result === 'null') {
+      if (latest_result === null) {
         return CIRCLE_NULL;
       } else if (latest_result === 'cross') {
         return CIRCLE_CROSS;
@@ -53,7 +54,7 @@ function calcFromResult(previous_result, latest_result) {
         return CIRCLE_CHECK;
       }
     } else if (previous_result === 'check') {
-      if (latest_result === 'null') {
+      if (latest_result === null) {
         return CHECK_NULL;
       } else if (latest_result === 'cross') {
         return CHECK_CROSS;
@@ -75,8 +76,10 @@ export function formatDateNow() {
 }
 
 function addDate(date, days) {
-  const resultDate = moment(date, 'YYYY-MM-DD HH:mm').add(days, 'days').format('YYYY-MM-DD HH:mm');
-  return resultDate;
+    if (days === 0) return null;
+    const min = days*24*60;
+    const resultDate = moment(date, 'YYYY-MM-DD HH:mm').add(min, 'minutes').format('YYYY-MM-DD HH:mm');
+    return resultDate;
 }
 
 function getRandomInterval(days) {

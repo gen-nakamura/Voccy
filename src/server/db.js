@@ -2,7 +2,7 @@ const sqlite3 = require('sqlite3').verbose();
 const dbPath = './voccy.db'; // SQLiteデータベースファイルのパス
 const db = new sqlite3.Database(dbPath);
 import { calculateNextTestTimestamp, formatDateNow, convertToBindParameters } from './logic';
-import { testFunction } from './test';
+import { testFunction, logFlashcardsTable, logSettingsTable } from './test';
 
 const createFlashcardsSQL = `
 CREATE TABLE IF NOT EXISTS flashcards (
@@ -49,7 +49,7 @@ const recordTestResultsSQL = `
   const deleteFlashcardSQL = `DELETE FROM flashcards WHERE id = ?`;
   const getSettingsSQL = 'SELECT * FROM settings WHERE id = 1';
   const getAllFlashcardsSQL = 'SELECT * FROM flashcards LIMIT ?';
-  const getQuizSetsSQL = 'SELECT * FROM tableName WHERE scheduled_test_timestamp IS NOT NULL ORDER BY datetime(scheduled_test_timestamp) ASC LIMIT ?;';
+  const getQuizSetsSQL = 'SELECT * FROM flashcards WHERE scheduled_test_timestamp IS NOT NULL ORDER BY datetime(scheduled_test_timestamp) ASC LIMIT ?;';
   const getFlashcardSQL = 'SELECT * FROM flashcards WHERE id = ?';
   
 // Settings table
@@ -137,7 +137,7 @@ function getSinglsFlashcard(id) {
 
 function getAllFlashcards(limit) {
   return new Promise((resolve, reject) => {
-    console.log('createFlashcardsTable');
+    console.log('getAllFlashcardsTable');
       db.all(getAllFlashcardsSQL, [limit], function(error, data) {
         if (error || data.length === 0) {
           reject(error);
@@ -209,10 +209,12 @@ function deleteFlashcard(id) {
 function getQuizSets() {
   return new Promise((resolve, reject) => {
   console.log('getQuizSets');
-    db.get(getQuizSetsSQL, function(error, data) {
+    db.all(getQuizSetsSQL, [process.env.max_test_nums], function(error, data) {
       if (error) {
         reject(error);
       } else {
+        console.log('this is quizsets');
+        console.log(data);
         resolve(data);
       }
     });
@@ -220,7 +222,7 @@ function getQuizSets() {
 }
 
 async function updateAllTheScheduledTestTimestamp() {
-  const flashcards = await getAllFlashcards(null);
+  const flashcards = await getAllFlashcards(1000000000);
   return new Promise((resolve, reject) => {
   console.log('updateAllTheScheduledTestTimestamp');  
   db.serialize(() => {
@@ -371,9 +373,9 @@ function startTest() {
         await testFunction(db, addANewVocab, 'testQuestion5', 'testAnswer5');
         await testFunction(db, addANewVocab, 'testQuestion6', 'testAnswer6');
         await testFunction(db, updateTheFlashcard, {id: 1, question: 'updatedQuestion', answer: 'updatedAnswer', previous_result: 'cross', latest_result: 'circle', latest_test_timestamp: '2023-06-03 17:51', scheduled_test_timestamp: '2023-06-03 19:00'});
-        await testFunction(db, changeTheSettings, {id: 1, remind_times: '[07:00, 13:00, 19:00]', remind_nums: 3, max_test_nums: 10});
+        await testFunction(db, changeTheSettings, {remind_times: '[07:00, 11:00, 15:00, 19:00, 23:00]', remind_nums: 5, max_test_nums: 3});
         await testFunction(db, openTheFlashcardsTest);
-        await testFunction(db, takeTheFlachcardsTest, {previous_result: 'circle', latest_result: 'check', latest_test_timestamp: formatDateNow()});
+        await testFunction(db, takeTheFlachcardsTest, {id: 3, previous_result: 'circle', latest_result: 'check', latest_test_timestamp: formatDateNow()});
         await testFunction(db, openTheListOfFlashcards, 5);
         await testFunction(db, deleteTheFlashcard, 1);
         await logFlashcardsTable(db);
