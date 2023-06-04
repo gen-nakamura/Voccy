@@ -13,7 +13,7 @@
       </div>
     </div>
     <div class="input-block">
-      <textarea v-model="answerInput" placeholder="Answer" class="input-field input-answer"></textarea>
+      <textarea v-model="answerInput" placeholder="Write an answer" class="input-field input-answer"></textarea>
     </div>
     <button @click="saveData" class="save-button">Save</button>
   </div>
@@ -27,8 +27,8 @@ export default {
   name: 'NewVocab',
   data() {
     return {
-      questionInput: 'sampleQuestion',
-      answerInput: 'sampleAnswer',
+      questionInput: '',
+      answerInput: '',
       questionInputHeight: 'auto',
       showOptions: false,
       waitForResponse: false,
