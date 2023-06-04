@@ -69,11 +69,19 @@
   - remind_nums
   - max_test_nums
 
+- test_records
+  - time
+
+- quota_failures
+  - time
+
 - [ ] when you open the app (app.ready)
   - [x] create flashcards
   - [x] create settings
   - [x] insert first settings value
   - [x] set process.env
+  - [ ] create test_records
+  - [ ] create quota_failures
 - [ ] when you add a new vocab
   - [x] insert QnA
   - [x] update the scheduled test timestamp
@@ -82,11 +90,16 @@
   - [x] set process.env
   - [x] update all the scheduled test timestamp
 - [ ] when you open the flashcards test
-  - [ ] get quizsets
+  - [ ] show quota_failures
+  - [x] get quizsets
 - [ ] when you take the flashcards test
   - [x] record status
   - [x] update the scheduled test timestamp
+  - [ ] record the time you did
+- [ ] when you've done all the flashcards test
+  - [ ] delete the time of quota_failures
 - [ ] when the app notifies you about the test schedule
+  - [ ] add time to quota_failures 
 - [ ] when you open the list of flashcards
   - [x] show
   - [x] delete
