@@ -42,14 +42,16 @@ export default {
         answer: this.answerInput
       };
 
-      axios.post('http://localhost:3000/api/data', data)
-        .then(response => {
-          console.log(response.data);
-          // Handle the response as needed
-        })
-        .catch(error => {
-          console.error('Error sending data:', error);
-        });
+      axios.post('http://localhost:3000/api/add_vocab', data)
+      .then(response => {
+        console.log('open_app, res: ', response.status, response.statusText);
+      })
+      .catch(error => {
+        // エラーレスポンスの処理
+        console.error('Error in request:', error);
+      });
+      this.questionInput = '';
+      this.answerInput = '';
     },
     toggleOptions() {
       this.showOptions = !this.showOptions;

@@ -49,7 +49,7 @@ const recordTestResultsSQL = `
   const deleteFlashcardSQL = `DELETE FROM flashcards WHERE id = ?`;
   const getSettingsSQL = 'SELECT * FROM settings WHERE id = 1';
   const getAllFlashcardsSQL = 'SELECT * FROM flashcards LIMIT ?';
-  const getQuizSetsSQL = 'SELECT * FROM flashcards WHERE scheduled_test_timestamp IS NOT NULL ORDER BY datetime(scheduled_test_timestamp) ASC LIMIT ?;';
+  const getQuizSetsSQL = `SELECT * FROM flashcards WHERE scheduled_test_timestamp IS NOT NULL AND scheduled_test_timestamp < strftime('%Y-%m-%d %H:%M', 'now') ORDER BY datetime(scheduled_test_timestamp) ASC LIMIT ?;`;
   const getFlashcardSQL = 'SELECT * FROM flashcards WHERE id = ?';
   
 // Settings table
@@ -186,7 +186,7 @@ function recordTestResults(testRecords) {
           reject(error);
         } else {
           console.log('recorded test results successfully');
-          const data = await getSinglsFlashcard(this.lastID);
+          const data = await getSinglsFlashcard(testRecords.id);
           resolve(data);
         }
       });

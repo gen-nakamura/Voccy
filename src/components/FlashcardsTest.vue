@@ -15,15 +15,17 @@
       </div>
     </div>
     <div class="choices-container">
-      <button @click="submitAnswer(false)" class="choice-button wrong"><i class="fas fa-times fa-2x fa-fw" aria-hidden="true"></i></button>
-      <button @click="submitAnswer(true)" class="choice-button correct"><i class="far fa-circle fa-2x fa-fw" aria-hidden="true"></i></button>
-      <button @click="submitAnswer(true, true)" class="choice-button correct"><i class="fas fa-check-circle fa-2x fa-fw" aria-hidden="true"></i></button>
+      <button @click="submitAnswer('cross')" class="choice-button wrong"><i class="fas fa-times fa-2x fa-fw" aria-hidden="true"></i></button>
+      <button @click="submitAnswer('circle')" class="choice-button correct"><i class="far fa-circle fa-2x fa-fw" aria-hidden="true"></i></button>
+      <button @click="submitAnswer('check')" class="choice-button correct"><i class="fas fa-check-circle fa-2x fa-fw" aria-hidden="true"></i></button>
     </div>
   </div>
 </div>
 </template>
 
 <script>
+import axios from 'axios';
+import { formatDateNow } from '@/server/logic'
 export default {
   data() {
     return {
@@ -55,9 +57,26 @@ export default {
     hideAll() {
       this.$refs.parent.style = "opacity: 0; transition: opacity 0.25s;"
     },
-    submitAnswer(isCorrect, isPerfect = false) {
-      console.log(isCorrect, isPerfect);
+    submitAnswer(status) {
+      console.log(status);
       this.$refs.parent.style = "opacity: 0; transition: opacity 0.25s";
+      const currentId = this.currentId;
+      const targetFlashcard = this.quizSets.find(flashcard => flashcard.id === currentId);
+      const recordBody = {id: targetFlashcard.id, latest_test_timestamp: formatDateNow()};
+      recordBody.previous_result = targetFlashcard.latest_result;
+      recordBody.latest_result = status;
+      if (targetFlashcard.previous_result === 'check' && targetFlashcard.latest_result === 'check') {
+        recordBody.latest_result = 'done';
+      }
+      console.log(recordBody);
+      axios.post('http://localhost:3000/api/take_test', recordBody)
+      .then(response => {
+        console.log('take test, res: ', response.status, response.statusText);
+      })
+      .catch(error => {
+        // エラーレスポンスの処理
+        console.error('Error in request:', error);
+      });
       setTimeout(() => {
         this.getQuestion();
       }, 250);
@@ -70,7 +89,6 @@ export default {
       this.$refs.parent.style = "display: none;";
     },
     getQuestion() {
-      // データ取得のロジックを追加する
       if (this.count >= this.quizSets.length) {
         this.allDone();
         return;
@@ -109,7 +127,20 @@ export default {
       }
     }
   },
-  mounted() {
+  async mounted() {
+    this.quizSets = 
+        await axios.post('http://localhost:3000/api/open_test')
+        .then(response => {
+          const { success, data } = response.data;
+          console.log('open_app, res: ', response.status, response.statusText);
+          console.log('this is response quizSets: ', data);
+          if (success) return data;
+          else console.log('some error occured in open_test');
+        })
+        .catch(error => {
+          // エラーレスポンスの処理
+          console.error('Error in request:', error);
+        });
     this.getQuestion();
   },
   

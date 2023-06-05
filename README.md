@@ -5,14 +5,14 @@
 ## User Stories
 ### You can ask question like this (The answer will be created with ChatGPT API)
 `Input: An English phrase or word.`
-- [ ] All in one:
+- [x] All in one:
   - [x] Rephrase it.
   - [x] Give some example sentences
 - [x] definition
 
 
 `Input: An English sentence`
-- [ ] All in one
+- [x] All in one
   - [x] Does it sound natural?
   - [x] Is it correct in grammar?
   - [x] Rephrase it.
@@ -23,7 +23,7 @@
 
 
 `Input: A Japanese sentence, phrase or word.`
-- [ ] How can I say this in English?
+- [x] How can I say this in English?
 
 `Input: An English sentence and the specific word or phrase inside. (In case you want to understand how to use a word in a certain context.)`
 - [ ] What does this word/phrase mean in this sentence?
@@ -32,7 +32,7 @@
   - [ ] その他の例文
 
 `Input: Some specific situation you face.`
-- [ ] こんな時英語でなんて言う？
+- [x] こんな時英語でなんて言う？
   - 形容詞での表現の幅が増えたり
   - 同じ事象を表現するのにも引き出しが増える
 - [ ] この会話にどう返す？
@@ -90,21 +90,21 @@
 - quota_failures
   - time
 
-- [ ] when you open the app (app.ready)
+- [x] when you open the app (app.ready)
   - [x] create flashcards
   - [x] create settings
   - [x] insert first settings value
   - [x] set process.env
   - [ ] create test_records
   - [ ] create quota_failures
-- [ ] when you add a new vocab
+- [x] when you add a new vocab
   - [x] insert QnA
   - [x] update the scheduled test timestamp
 - [ ] when you change the settings
   - [x] update settings
   - [x] set process.env
   - [x] update all the scheduled test timestamp
-- [ ] when you open the flashcards test
+- [x] when you open the flashcards test
   - [ ] show quota_failures
   - [x] get quizsets
 - [ ] when you take the flashcards test
@@ -115,12 +115,10 @@
   - [ ] delete the time of quota_failures
 - [ ] when the app notifies you about the test schedule
   - [ ] add time to quota_failures 
-- [ ] when you open the list of flashcards
+- [ ] when you open the list of flashcards and settings (open config)
   - [x] show
   - [x] delete
   - [x] update
-- [ ] when you update the schedule test time
-
 
 ## TODO
 - [ ] 画面をどうするか
