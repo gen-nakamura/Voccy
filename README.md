@@ -210,6 +210,6 @@ Python ver 2 is no longer supported by mac os
 ```
 nvm use 16
 which python
-export PYTHON_PATH=YOUR_PATH
+export PYTHON_PATH=/Library/Frameworks/Python.framework/Versions/2.7/bin/python
 npm run electron:build
 ```
