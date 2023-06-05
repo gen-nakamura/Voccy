@@ -1,6 +1,5 @@
 import { addANewVocab, changeTheSettings, doSomethingAsync, openTheApp, openTheFlashcardsTest, startTest, takeTheFlachcardsTest } from './db';
 const express = require('express');
-const sqlite3 = require('sqlite3').verbose();
 
 
 console.log('server.jsだよおおおおおおお\n\n\n');

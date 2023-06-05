@@ -1,5 +1,7 @@
 const sqlite3 = require('sqlite3').verbose();
-const dbPath = './voccy.db'; // SQLiteデータベースファイルのパス
+const { app } = require('electron');
+const path = require('path');
+const dbPath = path.join(app.getPath('userData'), './voccy.db'); // SQLiteデータベースファイルのパス
 const db = new sqlite3.Database(dbPath);
 import { calculateNextTestTimestamp, formatDateNow, convertToBindParameters } from './logic';
 import { testFunction, logFlashcardsTable, logSettingsTable } from './test';
