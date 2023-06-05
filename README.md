@@ -214,5 +214,3 @@ export PYTHON_PATH=/Library/Frameworks/Python.framework/Versions/2.7/bin/python
 npm run electron:build
 ```
 ### When build/distribution
-change the main property on package.json to ```dist_electron/bundled/background.js```
-write a 
