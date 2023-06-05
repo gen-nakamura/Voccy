@@ -1,9 +1,11 @@
 'use strict'
 
-import { app, protocol, BrowserWindow, Menu } from 'electron'
+import { app, protocol, BrowserWindow } from 'electron'
 import { createProtocol } from 'vue-cli-plugin-electron-builder/lib'
 import installExtension, { VUEJS3_DEVTOOLS } from 'electron-devtools-installer'
 const isDevelopment = process.env.NODE_ENV !== 'production'
+import { createServer } from './server/server'
+import axios from 'axios'
 
 // Scheme must be registered before the app is ready
 protocol.registerSchemesAsPrivileged([
@@ -13,8 +15,8 @@ protocol.registerSchemesAsPrivileged([
 async function createWindow() {
   // Create the browser window.
   const win = new BrowserWindow({
-    width: 800,
-    height: 600,
+    width: 1100,
+    height: 700,
     webPreferences: {
       
       // Use pluginOptions.nodeIntegration, leave this alone
@@ -62,6 +64,20 @@ app.on('ready', async () => {
       console.error('Vue Devtools failed to install:', e.toString())
     }
   }
+  const server = createServer();
+  server.listen(3000, () => {
+    console.log('Server running on port 3000');
+  });
+
+  axios.post('http://localhost:3000/api/open_app')
+  .then(response => {
+    console.log('open_app, res: ', response.status, response.statusText);
+  })
+  .catch(error => {
+    // エラーレスポンスの処理
+    console.error('Error in request:', error);
+  });
+
   createWindow()
 })
 
@@ -79,27 +95,3 @@ if (isDevelopment) {
     })
   }
 }
-
-const template = [
-  {
-    label: 'File',
-    submenu: [
-      { label: 'New', accelerator: 'CmdOrCtrl+N', click: () => { /* メニューがクリックされた時の処理 */ } },
-      { label: 'Open', accelerator: 'CmdOrCtrl+O', click: () => { /* メニューがクリックされた時の処理 */ } },
-      { label: 'Save', accelerator: 'CmdOrCtrl+S', click: () => { /* メニューがクリックされた時の処理 */ } },
-      { type: 'separator' },
-      { label: 'Quit', accelerator: 'CmdOrCtrl+Q', click: () => { app.quit(); } }
-    ]
-  },
-  {
-    label: 'Edit',
-    submenu: [
-      { label: 'Cut', accelerator: 'CmdOrCtrl+X', click: () => { /* メニューがクリックされた時の処理 */ } },
-      { label: 'Copy', accelerator: 'CmdOrCtrl+C', click: () => { /* メニューがクリックされた時の処理 */ } },
-      { label: 'Paste', accelerator: 'CmdOrCtrl+V', click: () => { /* メニューがクリックされた時の処理 */ } }
-    ]
-  }
-];
-
-const menu = Menu.buildFromTemplate(template);
-console.log('j;adljk')

@@ -1,74 +1,68 @@
-<script setup>
-import {RouterLink, RouterView} from 'vue-router'
-import HelloWorld from './components/HelloWorld.vue'
-</script>
-
 <template>
-  <header>
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="I did it!"/>
-    <nav>
-      <RouterLink to="/">Home</RouterLink>
-      <RouterLink to="/about">About</RouterLink>
-    </nav>
-  </header>
-
-  <RouterView />
+  <NavigationBar @switch-screen="handleSwitchScreen" />
+  <div class="home">
+    <component :is="currentScreen"></component>
+    <!-- <HelloWorld /> -->
+  </div>
 </template>
 
 <script>
-// import HelloWorld from './components/HelloWorld.vue'
+import NavigationBar from './components/NavigationBar.vue';
+import NewVocab from './components/NewVocab.vue';
+import FlashcardsTest from './components/FlashcardsTest.vue';
+// import axios from 'axios';
 
 export default {
-  name: 'App',
+  data() {
+    return {
+      currentScreen: 'NewVocab' // 最初に表示する画面を指定
+    };
+  },
   components: {
-    HelloWorld
-  }
-}
+    NavigationBar,
+    NewVocab,
+    FlashcardsTest
+  },
+  methods: {
+    handleSwitchScreen(screen) {
+      this.currentScreen = screen; // 画面を切り替える
+    },
+  },
+};
 </script>
 
 <style scoped>
-header {
-  line-height: 1.5;
-  max-height: 100vh;
+.app {
+  position: relative;
 }
 
-.logo {
-  display: block;
-  margin: 0 auto 2rem;
-}
-
-nav {
-  width: 100%;
-  font-size: 12px;
+.home {
+  margin-top: 50px; /* ナビゲーションバーの高さ分だけ下にスペースを空ける */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
   text-align: center;
-  margin-top: 2rem;
+  background-color: #f8f8f8;
 }
 
-nav a.router-link-exact-active {
-  color: var(--color-text);
+h1 {
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
 }
 
-nav a.router-link-exact-active:hover {
-  background-color: transparent;
+p {
+  font-size: 1.2rem;
+  margin-bottom: 2rem;
 }
 
-nav a {
-  display: inline-block;
-  padding: 0 1rem;
-  border-left: 1px solid var(--color-border);
-}
-
-nav a:first-of-type {
-  border: 0;
-}
-
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
+button {
+  padding: 0.8rem 1.5rem;
+  font-size: 1.2rem;
+  border: none;
+  background-color: #4caf50;
+  color: #fff;
+  cursor: pointer;
 }
 </style>
