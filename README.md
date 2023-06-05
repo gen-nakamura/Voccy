@@ -205,3 +205,11 @@ npm run lint
 
 ### Customize configuration
 See [Configuration Reference](https://cli.vuejs.org/config/).
+
+Python ver 2 is no longer supported by mac os
+```
+nvm use 16
+which python
+export PYTHON_PATH=YOUR_PATH
+npm run electron:build
+```
