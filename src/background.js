@@ -6,10 +6,9 @@ import installExtension, { VUEJS3_DEVTOOLS } from 'electron-devtools-installer'
 const isDevelopment = process.env.NODE_ENV !== 'production'
 import { createServer } from './server/server'
 import axios from 'axios'
-require('update-electron-app')({
-  repo: 'gen-nakamura/Voccy',
-  updateInterval: '5 minutes'
-})
+const { autoUpdater } = require("electron-updater")
+
+autoUpdater.checkForUpdatesAndNotify();
 
 // Scheme must be registered before the app is ready
 protocol.registerSchemesAsPrivileged([

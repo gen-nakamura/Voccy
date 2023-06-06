@@ -12,7 +12,15 @@ module.exports = defineConfig({
       builderOptions: {
         "appId": "voccy_gen-nakamura",
         "productName": "Voccy",
-        "icon": "src/build/icon.png"
+        "icon": "src/build/icon.png",
+        "publish": [{
+          "provider": "github",
+          "owner": "gen-nakamura",
+          "repo": "Voccy"
+        }],
+        win: {
+          target: 'nsis' // NSISインストーラーを使用してEXEファイルをエクスポート
+        }
       }
     }
   }
