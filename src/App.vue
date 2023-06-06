@@ -10,6 +10,7 @@
 import NavigationBar from './components/NavigationBar.vue';
 import NewVocab from './components/NewVocab.vue';
 import FlashcardsTest from './components/FlashcardsTest.vue';
+import ConfigurationEditVue from './components/ConfigurationEdit.vue';
 // import axios from 'axios';
 
 export default {
@@ -21,7 +22,8 @@ export default {
   components: {
     NavigationBar,
     NewVocab,
-    FlashcardsTest
+    FlashcardsTest,
+    ConfigurationEditVue
   },
   methods: {
     handleSwitchScreen(screen) {
