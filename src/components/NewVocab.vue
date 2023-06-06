@@ -8,7 +8,7 @@
       <div v-if="showOptions" class="options-menu">
         <ul>
           <li tabindex="0" v-for="(option, index) in options" :key="index" 
-          @keydown.enter="selectOption(index)">{{ option }}</li>
+          @keydown.enter="selectOption(index)" @click="selectOption(index)">{{ option }}</li>
         </ul>
       </div>
     </div>
