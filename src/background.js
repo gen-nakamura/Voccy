@@ -8,7 +8,15 @@ import { createServer } from './server/server'
 import axios from 'axios'
 const { autoUpdater } = require("electron-updater")
 
-autoUpdater.checkForUpdatesAndNotify();
+// autoUpdater.checkForUpdatesAndNotify();
+export default class AppUpdater {
+  constructor() {
+    const log = require("electron-log")
+    log.transports.file.level = "debug"
+    autoUpdater.logger = log
+    autoUpdater.checkForUpdatesAndNotify()
+  }
+}
 
 // Scheme must be registered before the app is ready
 protocol.registerSchemesAsPrivileged([
