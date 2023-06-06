@@ -214,3 +214,5 @@ export PYTHON_PATH=/Library/Frameworks/Python.framework/Versions/2.7/bin/python
 npm run electron:build
 ```
 ### When build/distribution
+add self sign
+`export CSC_NAME=VOCCY_SELF_SIGN`
