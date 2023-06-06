@@ -16,7 +16,8 @@ module.exports = defineConfig({
         "publish": [{
           "provider": "github",
           "owner": "gen-nakamura",
-          "repo": "Voccy"
+          "repo": "Voccy",
+          "releaseType": "release"
         }],
         win: {
           target: 'nsis' // NSISインストーラーを使用してEXEファイルをエクスポート
