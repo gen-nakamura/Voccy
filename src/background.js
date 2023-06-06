@@ -8,7 +8,7 @@ import { createServer } from './server/server'
 import axios from 'axios'
 require('update-electron-app')({
   repo: 'gen-nakamura/Voccy',
-  updateInterval: '5 minutes',
+  updateInterval: '1 hour',
   logger: require('electron-log')
 })
 
