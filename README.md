@@ -42,16 +42,16 @@
 
 
 ### Vocab test
-- [ ] User can see vocabs
-- [ ] User has a button to see the correct answer.
-- [ ] User can submit the result with three options.
-  - [ ] Immediate understand
-  - [ ] Understand in a min.
-  - [ ] Cannot understand.
+- [x] User can see vocabs
+- [x] User has a button to see the correct answer.
+- [x] User can submit the result with three options.
+  - [x] Immediate understand
+  - [x] Understand in a min.
+  - [x] Cannot understand.
 
 ### Reminder
-- [ ] Reminds your vocab test in a certain days after.
-- [ ] User can choose how many times in a day to have a set of tests.
+- [x] Reminds your vocab test in a certain days after.
+- [x] User can choose how many times in a day to have a set of tests.
 
 
 ### Pronunciation
@@ -137,33 +137,37 @@
   - [x] テスト画面
   - [x] それぞれのテストについてステータスを記憶できる
   - [x] chatGPTの翻訳を最低限
-- [ ] flashcardsのリストを表示できる
-  - [ ] 修正
-  - [ ] 削除
-  - [ ] テストする機能
-- [ ] dbの一括操作
+- [x] doneのステータス
 - [x] getQuizzes関数で今テストするべきものを取り出す
-- [ ] これらを時間でトリガー発生させる
+- [x] アウトプットも大事だけどこのアプリで主に担うのはインプットの補助。アウトプット学習は日常から工夫することで補いたい
 - [x] reminder時間を計算する関数
   - [x] configがアップデートされる度に呼び出す
   - [ ] 時間トリガーも変更する
+- [ ] 時間でトリガー発生させる
 - [ ] 名詞を画像と一緒に覚える
 - [ ] どのくらいやったかの記録、時間帯の判定
-- [x] アウトプットも大事だけどこのアプリで主に担うのはインプットの補助。アウトプット学習は日常から工夫することで補いたい
 - [ ] ノルマクリアのステータス
   - [ ] 通知と同時にその時間をバツにする
   - [ ] バツが複数ある時に警告（スキップorやる）
   - [ ] doneと同時にノルマステータスを削除
   - [ ] Congratulationsにいつの分が終わったのが記載する
-- [x] doneのステータス
+- [ ] dbの一括操作
+- [ ] flashcardsのリストを表示できる
+  - [ ] 修正
+  - [ ] 削除
+  - [ ] テストする機能
 - [ ] カード学習で戻る機能
 - [ ] 発音記号
 - [ ] 音声
+- [ ] 品詞の指定　
+- [ ] 初期のチュートリアル値の設定
+- [ ] ショートカットキーの実装
+- [ ] 回答後のエフェクト
 
-- [ ] download the app, initialize
+- [x] download the app, initialize
 - [ ] update settings
-- [ ] put some words
-- [ ] do a test
+- [x] put some words
+- [x] do a test
 - [ ] edit some words
 - [ ] delete some words
 
