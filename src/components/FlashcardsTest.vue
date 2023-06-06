@@ -131,7 +131,7 @@ export default {
     this.quizSets = 
         await axios.post('http://localhost:3000/api/open_test')
         .then(response => {
-          console.log('updated successfully');
+          console.log('updated successfully 1.0.8');
           const { success, data } = response.data;
           console.log('open_test, res: ', response.status, response.statusText);
           console.log('this is response quizSets: ', data);
