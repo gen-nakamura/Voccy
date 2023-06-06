@@ -6,17 +6,11 @@ import installExtension, { VUEJS3_DEVTOOLS } from 'electron-devtools-installer'
 const isDevelopment = process.env.NODE_ENV !== 'production'
 import { createServer } from './server/server'
 import axios from 'axios'
-const { autoUpdater } = require("electron-updater")
+require('update-electron-app')({
+  repo: 'gen-nakamura/Voccy',
+  updateInterval: '5 minutes'
+})
 
-// autoUpdater.checkForUpdatesAndNotify();
-export default class AppUpdater {
-  constructor() {
-    const log = require("electron-log")
-    log.transports.file.level = "debug"
-    autoUpdater.logger = log
-    autoUpdater.checkForUpdatesAndNotify()
-  }
-}
 
 // Scheme must be registered before the app is ready
 protocol.registerSchemesAsPrivileged([
@@ -68,7 +62,7 @@ app.on('activate', () => {
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
 app.on('ready', async () => {
-  new AppUpdater();
+
   if (isDevelopment && !process.env.IS_TEST) {
     // Install Vue Devtools
     try {
