@@ -1,9 +1,6 @@
 import { addANewVocab, changeTheSettings, doSomethingAsync, openTheApp, openTheFlashcardsTest, startTest, takeTheFlachcardsTest } from './db';
 const express = require('express');
 
-
-console.log('server.jsだよおおおおおおお\n\n\n');
-
 export function createServer() {
     const server = express();
 
