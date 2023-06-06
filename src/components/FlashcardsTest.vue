@@ -132,7 +132,7 @@ export default {
         await axios.post('http://localhost:3000/api/open_test')
         .then(response => {
           const { success, data } = response.data;
-          console.log('open_app, res: ', response.status, response.statusText);
+          console.log('open_test, res: ', response.status, response.statusText);
           console.log('this is response quizSets: ', data);
           if (success) return data;
           else console.log('some error occured in open_test');
