@@ -39,7 +39,8 @@ export default {
 }
 
 .home {
-  margin-top: 50px; /* ナビゲーションバーの高さ分だけ下にスペースを空ける */
+  margin-top: 50px;
+  /* ナビゲーションバーの高さ分だけ下にスペースを空ける */
   display: flex;
   flex-direction: column;
   align-items: center;

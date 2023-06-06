@@ -1,7 +1,7 @@
 import axios from 'axios'
 
 const new_word =
-`Provide a brief definition of the phrase or word.
+  `Provide a brief definition of the phrase or word.
 Show whether the one is used in formal, real-life conversation or both situations.
 Give 2 example sentences which are shorter than 20 words used in the situation above. If used in both situations, the example sentences would be 2 each, 4 in total.
 Then provide the 2 most frequently used expressions that can be used instead; Rephrasing.
@@ -27,7 +27,7 @@ Rephrasing:
 The phrase or word: `
 
 const word_usage =
-`Provide the 3 most frequently used expressions that can be used instead; Rephrasing.
+  `Provide the 3 most frequently used expressions that can be used instead; Rephrasing.
 Give 3 example sentences shorter than 20 words by using the rephrased word and the original word.
 All the responses should be provided in the format shown with the back quote below.
 format: \`
@@ -45,7 +45,7 @@ Examples:
 The phrase or word: `
 
 const sentence_rephrase =
-`Make sure the provided sentence is correct in grammar.
+  `Make sure the provided sentence is correct in grammar.
 Also, make sure the provided sentence is an expression commonly used by native speakers.
 If it has any problems above, show the improved sentence, fluent and grammarly correct.
 Then provide the 2 rephrased sentences.
@@ -64,7 +64,7 @@ Rephrasing:
 The sentence: `
 
 const in_english =
-`How can I say this Japanese sentence in English?
+  `How can I say this Japanese sentence in English?
 Give 3 example sentences shorter than 50 words.
 All the responses should be provided in the format shown with the back quote below.
 format: \`
@@ -76,7 +76,7 @@ Examples:
 The sentence: `
 
 const if_native =
-`What would English native speakers say in the situation given in Japanese? 
+  `What would English native speakers say in the situation given in Japanese? 
 Give 3 example sentences shorter than 50 words.
 All the responses should be provided in the format shown with the back quote below.
 format: \`
@@ -115,10 +115,10 @@ export async function createCompletion(option, prompt) {
 }
 
 function createChatGPTCommand(option, prompt) {
-  if (option === 'new_word') return new_word+`"${prompt}"`;
-  else if (option === 'word_usage') return word_usage+`"${prompt}"`;
-  else if (option === 'sentence_rephrase') return sentence_rephrase+`"${prompt}"`;
-  else if (option === 'これは英語で？') return in_english+`"${prompt}"`;
-  else if (option === 'if_native') return if_native+`"${prompt}"`;
+  if (option === 'new_word') return new_word + `"${prompt}"`;
+  else if (option === 'word_usage') return word_usage + `"${prompt}"`;
+  else if (option === 'sentence_rephrase') return sentence_rephrase + `"${prompt}"`;
+  else if (option === 'これは英語で？') return in_english + `"${prompt}"`;
+  else if (option === 'if_native') return if_native + `"${prompt}"`;
   else return null;
 }

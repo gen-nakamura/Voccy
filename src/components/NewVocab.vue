@@ -1,14 +1,15 @@
 <template>
   <div class="form-container" ref="parent" style="opacity: 0; transition: opacity 0.25s;">
     <div class="input-block">
-      <textarea v-model="questionInput" placeholder="Write a question" class="input-field input-question" :style="{ height: questionInputHeight }" ref="questionInput" @input="adjustQuestionInputHeight"></textarea>
+      <textarea v-model="questionInput" placeholder="Write a question" class="input-field input-question"
+        :style="{ height: questionInputHeight }" ref="questionInput" @input="adjustQuestionInputHeight"></textarea>
       <button @click="toggleOptions" ref="optionsMenu" class="options-button">
-        <i class="fa fa-spinner" :class="{'fa-spin': waitForResponse}"></i><!-- add fa-pulse to make it spin -->
+        <i class="fa fa-spinner" :class="{ 'fa-spin': waitForResponse }"></i><!-- add fa-pulse to make it spin -->
       </button>
       <div v-if="showOptions" class="options-menu">
         <ul>
-          <li tabindex="0" v-for="(option, index) in options" :key="index" 
-          @keydown.enter="selectOption(index)" @click="selectOption(index)">{{ option }}</li>
+          <li tabindex="0" v-for="(option, index) in options" :key="index" @keydown.enter="selectOption(index)"
+            @click="selectOption(index)">{{ option }}</li>
         </ul>
       </div>
     </div>
@@ -43,13 +44,13 @@ export default {
       };
 
       axios.post('http://localhost:3000/api/add_vocab', data)
-      .then(response => {
-        console.log('open_app, res: ', response.status, response.statusText);
-      })
-      .catch(error => {
-        // エラーレスポンスの処理
-        console.error('Error in request:', error);
-      });
+        .then(response => {
+          console.log('open_app, res: ', response.status, response.statusText);
+        })
+        .catch(error => {
+          // エラーレスポンスの処理
+          console.error('Error in request:', error);
+        });
       this.questionInput = '';
       this.answerInput = '';
     },

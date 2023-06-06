@@ -4,23 +4,26 @@
       <h1 class="congratulations-text" style="white-space: pre-line;">{{ message }}</h1>
     </div>
   </div>
-<div ref="parent" style="opacity: 0; transition: opacity 0.25s;">
-  <div class="test-container">
-    <div class="card-container">
-      <div class="card" @click="showAnswer">
-        <div class="card-content" ref="content" :key="currentAnswer"> <!-- question idにしたい -->
-          <h3 class="question" ref="question">{{ currentQuestion }}</h3>
-          <h3 class="answer" style="text-align: left;" :style="transitionDelay">{{ currentAnswer }}</h3>
+  <div ref="parent" style="opacity: 0; transition: opacity 0.25s;">
+    <div class="test-container">
+      <div class="card-container">
+        <div class="card" @click="showAnswer">
+          <div class="card-content" ref="content" :key="currentAnswer"> <!-- question idにしたい -->
+            <h3 class="question" ref="question">{{ currentQuestion }}</h3>
+            <h3 class="answer" style="text-align: left;" :style="transitionDelay">{{ currentAnswer }}</h3>
+          </div>
         </div>
       </div>
-    </div>
-    <div class="choices-container">
-      <button @click="submitAnswer('cross')" class="choice-button wrong"><i class="fas fa-times fa-2x fa-fw" aria-hidden="true"></i></button>
-      <button @click="submitAnswer('circle')" class="choice-button correct"><i class="far fa-circle fa-2x fa-fw" aria-hidden="true"></i></button>
-      <button @click="submitAnswer('check')" class="choice-button correct"><i class="fas fa-check-circle fa-2x fa-fw" aria-hidden="true"></i></button>
+      <div class="choices-container">
+        <button @click="submitAnswer('cross')" class="choice-button wrong"><i class="fas fa-times fa-2x fa-fw"
+            aria-hidden="true"></i></button>
+        <button @click="submitAnswer('circle')" class="choice-button correct"><i class="far fa-circle fa-2x fa-fw"
+            aria-hidden="true"></i></button>
+        <button @click="submitAnswer('check')" class="choice-button correct"><i class="fas fa-check-circle fa-2x fa-fw"
+            aria-hidden="true"></i></button>
+      </div>
     </div>
   </div>
-</div>
 </template>
 
 <script>
@@ -38,10 +41,10 @@ export default {
       questionAndAnswerHeight: 0,
       count: 0,
       quizSets: [
-        {id: 1,question: 'Sample Question1', answer: 'Sample Answer\n\n\najfld;jdsっっっっっっっっっdさあああああああああっffldkasj\n\nladsfjkk'},
-        {id: 2,question: 'Sample Question2', answer: 'adfalkdj;lkajs;ldfa'},
-        {id: 3,question: 'Sample Question3', answer: 'Sample Answer\n\n\najfld;jfldkasj\n\nladsfnswer\n\n\najfld;jfldkasj\n\nladsfjkk'},
-        ],
+        { id: 1, question: 'Sample Question1', answer: 'Sample Answer\n\n\najfld;jdsっっっっっっっっっdさあああああああああっffldkasj\n\nladsfjkk' },
+        { id: 2, question: 'Sample Question2', answer: 'adfalkdj;lkajs;ldfa' },
+        { id: 3, question: 'Sample Question3', answer: 'Sample Answer\n\n\najfld;jfldkasj\n\nladsfnswer\n\n\najfld;jfldkasj\n\nladsfjkk' },
+      ],
     };
   },
   computed: {
@@ -62,7 +65,7 @@ export default {
       this.$refs.parent.style = "opacity: 0; transition: opacity 0.25s";
       const currentId = this.currentId;
       const targetFlashcard = this.quizSets.find(flashcard => flashcard.id === currentId);
-      const recordBody = {id: targetFlashcard.id, latest_test_timestamp: formatDateNow()};
+      const recordBody = { id: targetFlashcard.id, latest_test_timestamp: formatDateNow() };
       recordBody.previous_result = targetFlashcard.latest_result;
       recordBody.latest_result = status;
       if (targetFlashcard.previous_result === 'check' && targetFlashcard.latest_result === 'check') {
@@ -70,13 +73,13 @@ export default {
       }
       console.log(recordBody);
       axios.post('http://localhost:3000/api/take_test', recordBody)
-      .then(response => {
-        console.log('take test, res: ', response.status, response.statusText);
-      })
-      .catch(error => {
-        // エラーレスポンスの処理
-        console.error('Error in request:', error);
-      });
+        .then(response => {
+          console.log('take test, res: ', response.status, response.statusText);
+        })
+        .catch(error => {
+          // エラーレスポンスの処理
+          console.error('Error in request:', error);
+        });
       setTimeout(() => {
         this.getQuestion();
       }, 250);
@@ -128,8 +131,8 @@ export default {
     }
   },
   async mounted() {
-    this.quizSets = 
-        await axios.post('http://localhost:3000/api/open_test')
+    this.quizSets =
+      await axios.post('http://localhost:3000/api/open_test')
         .then(response => {
           const { success, data } = response.data;
           console.log('open_test, res: ', response.status, response.statusText);
@@ -143,7 +146,7 @@ export default {
         });
     this.getQuestion();
   },
-  
+
 };
 </script>
 
@@ -173,7 +176,8 @@ export default {
   padding: 20px;
   max-width: 70vw;
   width: 100%;
-  margin: 0 auto; /* 中央揃えのために必要なマージン設定 */
+  margin: 0 auto;
+  /* 中央揃えのために必要なマージン設定 */
 }
 
 .card-content {
@@ -192,7 +196,8 @@ export default {
 
 .question {
   margin-bottom: 20px;
-  border-bottom: 2px solid #cccccc00; /*transparent*/
+  border-bottom: 2px solid #cccccc00;
+  /*transparent*/
   transition: 0.25s;
 }
 
@@ -253,9 +258,9 @@ export default {
     opacity: 0;
     transform: translateY(-20px);
   }
+
   100% {
     opacity: 1;
     transform: translateY(0);
   }
-}
-</style>
+}</style>

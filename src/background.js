@@ -25,7 +25,7 @@ async function createWindow() {
     height: 700,
     icon: './build/icon.png',
     webPreferences: {
-      
+
       // Use pluginOptions.nodeIntegration, leave this alone
       // See nklayman.github.io/vue-cli-plugin-electron-builder/guide/security.html#node-integration for more info
       nodeIntegration: process.env.ELECTRON_NODE_INTEGRATION,
@@ -78,13 +78,13 @@ app.on('ready', async () => {
   });
 
   axios.post('http://localhost:3000/api/open_app')
-  .then(response => {
-    console.log('open_app, res: ', response.status, response.statusText);
-  })
-  .catch(error => {
-    // エラーレスポンスの処理
-    console.error('Error in request:', error);
-  });
+    .then(response => {
+      console.log('open_app, res: ', response.status, response.statusText);
+    })
+    .catch(error => {
+      // エラーレスポンスの処理
+      console.error('Error in request:', error);
+    });
 
   createWindow()
 })
