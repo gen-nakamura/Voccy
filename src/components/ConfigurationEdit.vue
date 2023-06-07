@@ -26,7 +26,7 @@
                   <span v-else>{{ flashcard.question }}</span>
                 </td>
                 <td style="width: 15%;"
-                  :style="{ whiteSpace: (flashcard.id === answerWithLineBreaksId) ? 'normal' : 'nowrap' }">
+                  :style="{ whiteSpace: (flashcard.id === answerWithLineBreaksId) ? 'pre-line' : 'nowrap' }">
                   <textarea v-if="flashcard.id === editId" type="text" v-model="flashcard.answer" class="answer-input"
                     @input="adjustAnswerInputHeight"></textarea>
                   <span v-else class="answer-text">{{ flashcard.answer }}</span>
@@ -194,6 +194,7 @@ input[type="text"]:focus {
 
 
 <script>
+import axios from 'axios';
 export default {
   data() {
     return {
@@ -224,7 +225,9 @@ export default {
   },
   mounted() {
     // データを取得する処理（例としてfetchData関数を呼び出す）
-    this.flashcards = this.generateTestData();
+    // TODO fetchして表示する関数の作成
+    // this.flashcards = this.generateTestData();
+    this.openConfig();
   },
   methods: {
     displayAnswerWithLineBreaks(id) {
@@ -233,6 +236,9 @@ export default {
       this.answerWithLineBreaksId = id;
     },
     editFlashcard(event, id) {
+      if (id === this.editId) {
+        this.updateFlashcard();
+      }
       event.stopPropagation();
       this.answerWithLineBreaksId = id;
       this.editId = id;
@@ -240,14 +246,46 @@ export default {
         this.adjustAnswerInputHeight();
       });
     },
+    updateFlashcard() {
+      axios.post('http://localhost:3000/api/update_vocab', this.flashcards.find(i => i.id === this.editId))
+        .then(response => {
+          console.log('save flashcard, res: ', response.status, response.statusText);
+          this.editId = 0;
+        })
+        .catch(error => {
+          // エラーレスポンスの処理
+          console.error('Error in request:', error);
+        });
+    },
     deleteFlashcard(event, id) {
       event.stopPropagation();
       if (id === this.editId) {
         this.editId = 0;
         this.answerWithLineBreaksId = 0;
       } else {
-        // deleteする処理
+        axios.post('http://localhost:3000/api/delete_vocab', { id: id })
+          .then(response => {
+            console.log('delete vocab, res: ', response.status, response.statusText);
+            this.openConfig();
+          })
+          .catch(error => {
+            // エラーレスポンスの処理
+            console.error('Error in request:', error);
+          });
       }
+    },
+    openConfig() {
+      axios.post('http://localhost:3000/api/open_config', { limit: 2 })
+        .then(response => {
+          console.log('open config, res: ', response.status, response.statusText);
+          const { settings, flashcards } = response.data.data;
+          this.settings = settings;
+          this.flashcards = flashcards;
+        })
+        .catch(error => {
+          // エラーレスポンスの処理
+          console.error('Error in request:', error);
+        });
     },
     resultIcon(result) {
       if (result === 'cross') return 'fas fa-times fa-fw';
@@ -268,12 +306,6 @@ export default {
       const month = (date.getMonth() + 1).toString().padStart(2, '0');
       const day = date.getDate().toString().padStart(2, '0');
       return `${month}/${day}`;
-    },
-    fetchData() {
-      // flashcardsテーブルからデータを取得する処理（例としてgetFlashcards関数を呼び出す）
-      //   this.flashcards = getFlashcards();
-      // settingsテーブルからデータを取得する処理（例としてgetSettings関数を呼び出す）
-      //   this.settings = getSettings();
     },
     generateTestData() {
       function padZero(value) {

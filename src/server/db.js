@@ -336,8 +336,9 @@ async function takeTheFlachcardsTest(testRecords) {
 async function openTheListOfFlashcards(limit) {
   console.log('open the list of flashcards');
   try {
-    const data = await getAllFlashcards(limit);
-    return data;
+    const flashcards = await getAllFlashcards(limit);
+    const settings = await getSettings();
+    return { flashcards: flashcards, settings: settings};
   } catch (error) {
     console.log('catch error in openTheListOfFlashcards');
     throw new Error(error);
@@ -357,7 +358,7 @@ async function deleteTheFlashcard(id) {
 async function updateTheFlashcard(flashcard) {
   console.log('update the flashcard');
   try {
-    updateFlashcard(flashcard);
+    await updateFlashcard(flashcard);
   } catch (error) {
     console.log('catch error in updateTheFlashcard');
     throw new Error(error);
@@ -390,7 +391,7 @@ function startTest() {
   });
 }
 
-export { openTheApp, addANewVocab, updateFlashcard, changeTheSettings, openTheFlashcardsTest, takeTheFlachcardsTest, openTheListOfFlashcards, deleteFlashcard }
+export { openTheApp, addANewVocab, updateTheFlashcard, changeTheSettings, openTheFlashcardsTest, takeTheFlachcardsTest, openTheListOfFlashcards, deleteTheFlashcard, getSettings }
 
 // serverで確かめる。テストデータを用意する
 // chatGPTに任せる。前後をわかりやすく出力させる

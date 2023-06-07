@@ -1,4 +1,4 @@
-import { addANewVocab, changeTheSettings, doSomethingAsync, openTheApp, openTheFlashcardsTest, startTest, takeTheFlachcardsTest } from './db';
+import { addANewVocab, changeTheSettings, deleteTheFlashcard, doSomethingAsync, getSettings, openTheApp, openTheFlashcardsTest, openTheListOfFlashcards, startTest, takeTheFlachcardsTest, updateTheFlashcard } from './db';
 const express = require('express');
 
 export function createServer() {
@@ -105,16 +105,40 @@ export function createServer() {
     //     }
     // });
 
-    // server.post('/api/open_config', async (req, res) => {
-    //     console.log('/api/open_config');
-    //     const { questionInput, answerInput } = req.body;
-    //     try {
-    //         await addANewVocab(questionInput, answerInput);
-    //         res.json({ success: true });
-    //     } catch (error) {
-    //         console.error('error in /api/open_app: ', error);
-    //         res.status(500).json({ error: 'Internal Server Error' });
-    //     }
-    // });
+    server.post('/api/open_config', async (req, res) => {
+        console.log('/api/open_config');
+        const { limit } = req.body;
+        try {
+            const data = await openTheListOfFlashcards(limit);
+            res.json({ success: true, data });
+        } catch (error) {
+            console.error('error in /api/open_app: ', error);
+            res.status(500).json({ error: 'Internal Server Error' });
+        }
+    });
+    
+    server.post('/api/delete_vocab', async (req, res) => {
+        console.log('/api/delete_vocab');
+        const { id } = req.body;
+        try {
+            await deleteTheFlashcard(id);
+            res.json({ success: true });
+        } catch (error) {
+            console.error('error in /api/delete_vocab: ', error);
+            res.status(500).json({ error: 'Internal Server Error' });
+        }
+    });
+    
+    server.post('/api/update_vocab', async (req, res) => {
+        console.log('/api/update_vocab');
+        try {
+            await updateTheFlashcard(req.body);
+            res.json({ success: true });
+        } catch (error) {
+            console.error('error in /api/update_vocab: ', error);
+            res.status(500).json({ error: 'Internal Server Error' });
+        }
+    });
+
     return server;
 };
