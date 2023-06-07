@@ -2,7 +2,6 @@
   <NavigationBar @switch-screen="handleSwitchScreen" />
   <div class="home">
     <component :is="currentScreen"></component>
-    <!-- <HelloWorld /> -->
   </div>
 </template>
 
@@ -39,13 +38,13 @@ export default {
 }
 
 .home {
-  margin-top: 50px;
+  margin-top: 65px;
   /* ナビゲーションバーの高さ分だけ下にスペースを空ける */
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  height: calc(100vh - 50px);
+  height: calc(100vh - 65px);
   text-align: center;
   background-color: #f8f8f8;
 }
@@ -58,14 +57,5 @@ h1 {
 p {
   font-size: 1.2rem;
   margin-bottom: 2rem;
-}
-
-button {
-  padding: 0.8rem 1.5rem;
-  font-size: 1.2rem;
-  border: none;
-  background-color: #4caf50;
-  color: #fff;
-  cursor: pointer;
 }
 </style>
