@@ -45,7 +45,7 @@ export default {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  height: 100vh;
+  height: calc(100vh - 50px);
   text-align: center;
   background-color: #f8f8f8;
 }
