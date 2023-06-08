@@ -318,7 +318,7 @@ export default {
       }
     },
     openConfig() {
-      axios.post('http://localhost:3000/api/open_config', { limit: 2 })
+      axios.post('http://localhost:3000/api/open_config', { limit: 10000000 })
         .then(response => {
           console.log('open config, res: ', response.status, response.statusText);
           const { settings, flashcards } = response.data.data;
