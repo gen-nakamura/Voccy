@@ -213,6 +213,7 @@ input[type="text"]:focus {
 
 <script>
 import axios from 'axios';
+import { useToast } from 'vue-toastification'
 export default {
   data() {
     return {
@@ -269,6 +270,7 @@ export default {
           console.log('save flashcard, res: ', response.status, response.statusText);
           this.editId = 0;
           this.openConfig();
+          useToast().success('saved successfully!');
         })
         .catch(error => {
           // エラーレスポンスの処理
@@ -295,19 +297,20 @@ export default {
     },
     async changeSettings() {
       if (this.editSettings) {
-        if (!(this.isInteger(this.settings.remind_nums) && this.isInteger(this.settings.max_test_nums))) console.log('the input must be an integer');// TODO 警告する
+        if (!(this.isInteger(this.settings.remind_nums) && this.isInteger(this.settings.max_test_nums))) useToast().error('the input must be an integer');// TODO 警告する
         else {
           await axios.post('http://localhost:3000/api/change_settings', this.settings)
           .then(response => {
             console.log('edit settings, res: ', response.status, response.statusText);
+            this.editSettings = false;
+            this.openConfig();
+            useToast().success('saved successfully!');
           })
           .catch(error => {
             // エラーレスポンスの処理
             console.error('Error in request:', error);
           });
         }
-        this.editSettings = false;
-        this.openConfig();
       } else {
         this.editSettings = true;
       }
