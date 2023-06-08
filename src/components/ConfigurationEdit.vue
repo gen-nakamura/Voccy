@@ -1,6 +1,6 @@
 <template>
   <div id="page">
-    <div class="container flashcards-container">
+    <div class="container flashcards-container" :style="{height: (editId === 0 && answerWithLineBreaksId === 0) ? '60%' : '90%'}">
       <h2>Flashcards</h2>
       <div class="table-container">
         <table>
@@ -111,10 +111,6 @@
   margin-top: 20px;
 }
 
-.flashcards-container {
-  height: 60%;
-}
-
 .settings-container {
   height: 25%;
 }
@@ -130,7 +126,7 @@ table {
 }
 
 .tbody-container {
-  max-height: 30vh;
+  max-height: calc(100% - 120px);
   overflow: auto;
 }
 
@@ -160,10 +156,6 @@ tr {
 
 tr:hover {
   background-color: #f2f2f2;
-}
-
-h2 {
-  /* margin-top: 10px; */
 }
 
 .edit-button,
@@ -252,6 +244,7 @@ export default {
   },
   mounted() {
     this.openConfig();
+    // this.flashcards = this.generateTestData();
   },
   methods: {
     displayAnswerWithLineBreaks(id) {
