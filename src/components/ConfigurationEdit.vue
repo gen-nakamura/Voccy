@@ -58,9 +58,9 @@
             <th style="width: 15%">Remind Times</th>
             <th style="width: 10%">Remind Nums</th>
             <th style="width: 10%">Max Test Nums</th>
-            <th style="width: 10%"></th> 
-            <th style="width: 5%"></th> 
-            <th style="width: 5%"></th> 
+            <th style="width: 10%"></th>
+            <th style="width: 5%"></th>
+            <th style="width: 5%"></th>
           </tr>
         </thead>
         <tbody>
@@ -79,11 +79,11 @@
             </td>
             <td style="width: 10%"></td>
             <td style="width: 5%">
-              <button class="edit-button" @click="changeSettings()"><i 
-                :class="{ 'fas fa-save fa-fw': editSettings === true, 'fas fa-edit fa-fw': editSettings !== true }"></i></button>
+              <button class="edit-button" @click="changeSettings()"><i
+                  :class="{ 'fas fa-save fa-fw': editSettings === true, 'fas fa-edit fa-fw': editSettings !== true }"></i></button>
             </td>
             <td style="width: 5%">
-              <button v-if="editSettings" @click="() => {editSettings = false; openConfig();}" class="delete-button">
+              <button v-if="editSettings" @click="() => { editSettings = false; openConfig(); }" class="delete-button">
                 <i class="fas fa-times fa-fw"></i>
               </button>
             </td>
@@ -98,6 +98,7 @@
 #page {
   height: 95%;
 }
+
 .container {
   max-width: 90%;
   margin: auto auto;
@@ -304,7 +305,7 @@ export default {
     },
     changeSettings() {
       if (this.editSettings) {
-        axios.post('http://localhost:3000/api/change_settings', {  })
+        axios.post('http://localhost:3000/api/change_settings', {})
           .then(response => {
             console.log('edit settings, res: ', response.status, response.statusText);
             this.openConfig();

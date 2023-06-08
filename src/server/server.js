@@ -12,7 +12,7 @@ export function createServer() {
         res.setHeader('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
         next();
     });
-    
+
     // server.post('/api/data', async (req, res) => {
     //     console.log('get a post request');
     //     const { questionInput, answerInput } = req.body;
@@ -116,7 +116,7 @@ export function createServer() {
             res.status(500).json({ error: 'Internal Server Error' });
         }
     });
-    
+
     server.post('/api/delete_vocab', async (req, res) => {
         console.log('/api/delete_vocab');
         const { id } = req.body;
@@ -128,7 +128,7 @@ export function createServer() {
             res.status(500).json({ error: 'Internal Server Error' });
         }
     });
-    
+
     server.post('/api/update_vocab', async (req, res) => {
         console.log('/api/update_vocab');
         try {
@@ -139,7 +139,7 @@ export function createServer() {
             res.status(500).json({ error: 'Internal Server Error' });
         }
     });
-    
+
     server.post('/api/change_settings', async (req, res) => {
         console.log('/api/change_settings');
         try {
