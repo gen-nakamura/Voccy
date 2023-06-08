@@ -55,17 +55,17 @@
       <table>
         <thead>
           <tr>
-            <th style="width: 15%">Remind Times</th>
+            <th style="width: 20%">Remind Times</th>
             <th style="width: 10%">Remind Nums</th>
             <th style="width: 10%">Max Test Nums</th>
-            <th style="width: 10%"></th>
+            <th style="width: 5%"></th>
             <th style="width: 5%"></th>
             <th style="width: 5%"></th>
           </tr>
         </thead>
         <tbody>
           <tr>
-            <td style="width: 15%">
+            <td style="width: 20%">
               <input v-if="editSettings" type="text" v-model="settings.remind_times">
               <span v-else>{{ settings.remind_times }}</span>
             </td>
@@ -77,7 +77,7 @@
               <input v-if="editSettings" type="text" v-model="settings.max_test_nums">
               <span v-else>{{ settings.max_test_nums }}</span>
             </td>
-            <td style="width: 10%"></td>
+            <td style="width: 5%"></td>
             <td style="width: 5%">
               <button class="edit-button" @click="changeSettings()"><i
                   :class="{ 'fas fa-save fa-fw': editSettings === true, 'fas fa-edit fa-fw': editSettings !== true }"></i></button>
@@ -244,16 +244,13 @@ export default {
           scheduled_test_timestamp: "2023-06-03 19:00",
         },
       ],
-      settings: [],
+      settings: {},
       answerWithLineBreaksId: 0,
       editId: 0,
       editSettings: false,
     };
   },
   mounted() {
-    // データを取得する処理（例としてfetchData関数を呼び出す）
-    // TODO fetchして表示する関数の作成
-    // this.flashcards = this.generateTestData();
     this.openConfig();
   },
   methods: {
@@ -289,7 +286,7 @@ export default {
       event.stopPropagation();
       if (id === this.editId) {
         this.editId = 0;
-        this.answerWithLineBreaksId = 0;
+        this.answerWithLineBreaksId = id;
         this.openConfig();
       } else {
         axios.post('http://localhost:3000/api/delete_vocab', { id: id })
@@ -303,17 +300,21 @@ export default {
           });
       }
     },
-    changeSettings() {
+    async changeSettings() {
       if (this.editSettings) {
-        axios.post('http://localhost:3000/api/change_settings', {})
+        if (!(this.isInteger(this.settings.remind_nums) && this.isInteger(this.settings.max_test_nums))) console.log('the input must be an integer');// TODO 警告する
+        else {
+          await axios.post('http://localhost:3000/api/change_settings', this.settings)
           .then(response => {
             console.log('edit settings, res: ', response.status, response.statusText);
-            this.openConfig();
           })
           .catch(error => {
             // エラーレスポンスの処理
             console.error('Error in request:', error);
           });
+        }
+        this.editSettings = false;
+        this.openConfig();
       } else {
         this.editSettings = true;
       }
@@ -323,6 +324,8 @@ export default {
         .then(response => {
           console.log('open config, res: ', response.status, response.statusText);
           const { settings, flashcards } = response.data.data;
+          delete settings.id;
+          console.log(response.data);
           this.settings = settings;
           this.flashcards = flashcards;
         })
@@ -350,6 +353,9 @@ export default {
       const month = (date.getMonth() + 1).toString().padStart(2, '0');
       const day = date.getDate().toString().padStart(2, '0');
       return `${month}/${day}`;
+    },
+    isInteger(value) {
+      return !isNaN(Number(value)) && (Number.isInteger(Number(value)));
     },
     generateTestData() {
       function padZero(value) {
