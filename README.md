@@ -115,7 +115,7 @@
   - [ ] delete the time of quota_failures
 - [ ] when the app notifies you about the test schedule
   - [ ] add time to quota_failures 
-- [ ] when you open the list of flashcards and settings (open config)
+- [x] when you open the list of flashcards and settings (open config)
   - [x] show
   - [x] delete
   - [x] update

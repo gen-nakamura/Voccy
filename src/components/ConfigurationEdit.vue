@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div id="page">
     <div class="container flashcards-container">
       <h2>Flashcards</h2>
       <div class="table-container">
@@ -50,28 +50,42 @@
       </div>
     </div>
 
-    <div class="container">
+    <div class="container settings-container">
       <h2>Settings</h2>
       <table>
         <thead>
           <tr>
-            <th>Remind Times</th>
-            <th>Remind Nums</th>
-            <th>Max Test Nums</th>
-            <th></th> <!-- Edit ボタン用の列 -->
-            <th></th> <!-- Delete ボタン用の列 -->
+            <th style="width: 15%">Remind Times</th>
+            <th style="width: 10%">Remind Nums</th>
+            <th style="width: 10%">Max Test Nums</th>
+            <th style="width: 10%"></th> 
+            <th style="width: 5%"></th> 
+            <th style="width: 5%"></th> 
           </tr>
         </thead>
         <tbody>
-          <tr v-for="setting in settings" :key="setting.id">
-            <td>{{ setting.remind_times }}</td>
-            <td>{{ setting.remind_nums }}</td>
-            <td>{{ setting.max_test_nums }}</td>
-            <td>
-              <button class="edit-button" @click="editSetting(setting.id)"></button>
+          <tr>
+            <td style="width: 15%">
+              <input v-if="editSettings" type="text" v-model="settings.remind_times">
+              <span v-else>{{ settings.remind_times }}</span>
             </td>
-            <td>
-              <button class="delete-button" @click="deleteSetting(setting.id)">Delete</button>
+            <td style="width: 10%">
+              <input v-if="editSettings" type="text" v-model="settings.remind_nums">
+              <span v-else>{{ settings.remind_nums }}</span>
+            </td>
+            <td style="width: 10%">
+              <input v-if="editSettings" type="text" v-model="settings.max_test_nums">
+              <span v-else>{{ settings.max_test_nums }}</span>
+            </td>
+            <td style="width: 10%"></td>
+            <td style="width: 5%">
+              <button class="edit-button" @click="changeSettings()"><i 
+                :class="{ 'fas fa-save fa-fw': editSettings === true, 'fas fa-edit fa-fw': editSettings !== true }"></i></button>
+            </td>
+            <td style="width: 5%">
+              <button v-if="editSettings" @click="() => {editSettings = false; openConfig();}" class="delete-button">
+                <i class="fas fa-times fa-fw"></i>
+              </button>
             </td>
           </tr>
         </tbody>
@@ -81,6 +95,9 @@
 </template>
 
 <style scoped>
+#page {
+  height: 95%;
+}
 .container {
   max-width: 90%;
   margin: auto auto;
@@ -91,6 +108,14 @@
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   margin-bottom: 20px;
   margin-top: 20px;
+}
+
+.flashcards-container {
+  height: 60%;
+}
+
+.settings-container {
+  height: 25%;
 }
 
 .table-container {
@@ -137,7 +162,7 @@ tr:hover {
 }
 
 h2 {
-  margin-top: 10px;
+  /* margin-top: 10px; */
 }
 
 .edit-button,
@@ -221,6 +246,7 @@ export default {
       settings: [],
       answerWithLineBreaksId: 0,
       editId: 0,
+      editSettings: false,
     };
   },
   mounted() {
@@ -251,6 +277,7 @@ export default {
         .then(response => {
           console.log('save flashcard, res: ', response.status, response.statusText);
           this.editId = 0;
+          this.openConfig();
         })
         .catch(error => {
           // エラーレスポンスの処理
@@ -262,6 +289,7 @@ export default {
       if (id === this.editId) {
         this.editId = 0;
         this.answerWithLineBreaksId = 0;
+        this.openConfig();
       } else {
         axios.post('http://localhost:3000/api/delete_vocab', { id: id })
           .then(response => {
@@ -272,6 +300,21 @@ export default {
             // エラーレスポンスの処理
             console.error('Error in request:', error);
           });
+      }
+    },
+    changeSettings() {
+      if (this.editSettings) {
+        axios.post('http://localhost:3000/api/change_settings', {  })
+          .then(response => {
+            console.log('edit settings, res: ', response.status, response.statusText);
+            this.openConfig();
+          })
+          .catch(error => {
+            // エラーレスポンスの処理
+            console.error('Error in request:', error);
+          });
+      } else {
+        this.editSettings = true;
       }
     },
     openConfig() {
