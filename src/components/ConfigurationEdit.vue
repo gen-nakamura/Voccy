@@ -1,6 +1,9 @@
 <template>
+  <ConfirmDialog></ConfirmDialog>
+  <Toast />
   <div id="page">
-    <div class="container flashcards-container" :style="{height: (editId === 0 && answerWithLineBreaksId === 0) ? '60%' : '90%'}">
+    <div class="container flashcards-container"
+      :style="{ height: (editId === 0 && answerWithLineBreaksId === 0) ? '60%' : '90%' }">
       <h2>Flashcards</h2>
       <div class="table-container">
         <table>
@@ -213,8 +216,14 @@ input[type="text"]:focus {
 
 <script>
 import axios from 'axios';
-import { useToast } from 'vue-toastification'
+import ConfirmDialog from 'primevue/confirmdialog';
+import Toast from 'primevue/toast';
+
 export default {
+  components: {
+    ConfirmDialog,
+    Toast
+  },
   data() {
     return {
       flashcards: [
@@ -240,7 +249,7 @@ export default {
       settings: {},
       answerWithLineBreaksId: 0,
       editId: 0,
-      editSettings: false,
+      editSettings: false
     };
   },
   mounted() {
@@ -270,7 +279,7 @@ export default {
           console.log('save flashcard, res: ', response.status, response.statusText);
           this.editId = 0;
           this.openConfig();
-          useToast().success('saved successfully!');
+          this.$toast.add({ severity: 'success', summary: 'Saved!', detail: 'Your data was saved successfully', life: 2000 });
         })
         .catch(error => {
           // エラーレスポンスの処理
@@ -284,32 +293,41 @@ export default {
         this.answerWithLineBreaksId = id;
         this.openConfig();
       } else {
-        axios.post('http://localhost:3000/api/delete_vocab', { id: id })
-          .then(response => {
-            console.log('delete vocab, res: ', response.status, response.statusText);
-            this.openConfig();
-          })
-          .catch(error => {
-            // エラーレスポンスの処理
-            console.error('Error in request:', error);
-          });
+        this.$confirm.require({
+          message: 'Are you sure you want to delete?',
+          header: 'Confirmation',
+          icon: 'pi pi-exclamation-triangle',
+          accept: () => {
+            axios.post('http://localhost:3000/api/delete_vocab', { id: id })
+              .then(response => {
+                console.log('delete vocab, res: ', response.status, response.statusText);
+                this.openConfig();
+                this.$toast.add({ severity: 'success', summary: 'Deleted', detail: 'You deleted your data successfully', life: 2000 });
+              })
+              .catch(error => {
+                // エラーレスポンスの処理
+                console.error('Error in request:', error);
+              });
+          }
+        });
       }
     },
     async changeSettings() {
       if (this.editSettings) {
-        if (!(this.isInteger(this.settings.remind_nums) && this.isInteger(this.settings.max_test_nums))) useToast().error('the input must be an integer');// TODO 警告する
-        else {
+        if (!(this.isInteger(this.settings.remind_nums) && this.isInteger(this.settings.max_test_nums))) {
+          this.$toast.add({ severity: 'error', summary: 'Type Error', detail: 'the input must be an integer', life: 2000 });
+        } else {
           await axios.post('http://localhost:3000/api/change_settings', this.settings)
-          .then(response => {
-            console.log('edit settings, res: ', response.status, response.statusText);
-            this.editSettings = false;
-            this.openConfig();
-            useToast().success('saved successfully!');
-          })
-          .catch(error => {
-            // エラーレスポンスの処理
-            console.error('Error in request:', error);
-          });
+            .then(response => {
+              console.log('edit settings, res: ', response.status, response.statusText);
+              this.editSettings = false;
+              this.openConfig();
+              this.$toast.add({ severity: 'success', summary: 'Saved!', detail: 'Your data was saved successfully', life: 2000 });
+            })
+            .catch(error => {
+              // エラーレスポンスの処理
+              console.error('Error in request:', error);
+            });
         }
       } else {
         this.editSettings = true;
