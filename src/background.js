@@ -73,11 +73,11 @@ app.on('ready', async () => {
     }
   }
   const server = createServer();
-  server.listen(3000, () => {
-    console.log('Server running on port 3000');
+  server.listen(3307, () => {
+    console.log('Server running on port 3307');
   });
 
-  axios.post('http://localhost:3000/api/open_app')
+  axios.post('http://localhost:3307/api/open_app')
     .then(response => {
       console.log('open_app, res: ', response.status, response.statusText);
     })

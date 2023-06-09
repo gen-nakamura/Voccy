@@ -72,7 +72,7 @@ export default {
         recordBody.latest_result = 'done';
       }
       console.log(recordBody);
-      axios.post('http://localhost:3000/api/take_test', recordBody)
+      axios.post('http://localhost:3307/api/take_test', recordBody)
         .then(response => {
           console.log('take test, res: ', response.status, response.statusText);
         })
@@ -132,7 +132,7 @@ export default {
   },
   async mounted() {
     this.quizSets =
-      await axios.post('http://localhost:3000/api/open_test')
+      await axios.post('http://localhost:3307/api/open_test')
         .then(response => {
           const { success, data } = response.data;
           console.log('open_test, res: ', response.status, response.statusText);

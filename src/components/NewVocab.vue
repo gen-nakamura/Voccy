@@ -43,7 +43,7 @@ export default {
         answer: this.answerInput
       };
 
-      axios.post('http://localhost:3000/api/add_vocab', data)
+      axios.post('http://localhost:3307/api/add_vocab', data)
         .then(response => {
           console.log('open_app, res: ', response.status, response.statusText);
         })
