@@ -274,7 +274,7 @@ export default {
       });
     },
     updateFlashcard() {
-      axios.post('http://localhost:3000/api/update_vocab', this.flashcards.find(i => i.id === this.editId))
+      axios.post('http://localhost:3307/api/update_vocab', this.flashcards.find(i => i.id === this.editId))
         .then(response => {
           console.log('save flashcard, res: ', response.status, response.statusText);
           this.editId = 0;
@@ -298,7 +298,7 @@ export default {
           header: 'Confirmation',
           icon: 'pi pi-exclamation-triangle',
           accept: () => {
-            axios.post('http://localhost:3000/api/delete_vocab', { id: id })
+            axios.post('http://localhost:3307/api/delete_vocab', { id: id })
               .then(response => {
                 console.log('delete vocab, res: ', response.status, response.statusText);
                 this.openConfig();
@@ -317,7 +317,7 @@ export default {
         if (!(this.isInteger(this.settings.remind_nums) && this.isInteger(this.settings.max_test_nums))) {
           this.$toast.add({ severity: 'error', summary: 'Type Error', detail: 'the input must be an integer', life: 2000 });
         } else {
-          await axios.post('http://localhost:3000/api/change_settings', this.settings)
+          await axios.post('http://localhost:3307/api/change_settings', this.settings)
             .then(response => {
               console.log('edit settings, res: ', response.status, response.statusText);
               this.editSettings = false;
@@ -334,7 +334,7 @@ export default {
       }
     },
     openConfig() {
-      axios.post('http://localhost:3000/api/open_config', { limit: 10000000 })
+      axios.post('http://localhost:3307/api/open_config', { limit: 10000000 })
         .then(response => {
           console.log('open config, res: ', response.status, response.statusText);
           const { settings, flashcards } = response.data.data;
