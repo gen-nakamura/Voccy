@@ -40,11 +40,7 @@ export default {
       showingAnswer: false,
       questionAndAnswerHeight: 0,
       count: 0,
-      quizSets: [
-        { id: 1, question: 'Sample Question1', answer: 'Sample Answer\n\n\najfld;jdsっっっっっっっっっdさあああああああああっffldkasj\n\nladsfjkk' },
-        { id: 2, question: 'Sample Question2', answer: 'adfalkdj;lkajs;ldfa' },
-        { id: 3, question: 'Sample Question3', answer: 'Sample Answer\n\n\najfld;jfldkasj\n\nladsfnswer\n\n\najfld;jfldkasj\n\nladsfjkk' },
-      ],
+      quizSets: [],
     };
   },
   computed: {
