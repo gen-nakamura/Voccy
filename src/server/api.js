@@ -115,10 +115,10 @@ export async function createCompletion(option, prompt) {
 }
 
 function createChatGPTCommand(option, prompt) {
-  if (option === 'new_word') return new_word + `"${prompt}"`;
-  else if (option === 'word_usage') return word_usage + `"${prompt}"`;
-  else if (option === 'sentence_rephrase') return sentence_rephrase + `"${prompt}"`;
+  if (option === 'new word') return new_word + `"${prompt}"`;
+  else if (option === 'word usage') return word_usage + `"${prompt}"`;
+  else if (option === 'sentence rephrase') return sentence_rephrase + `"${prompt}"`;
   else if (option === 'これは英語で？') return in_english + `"${prompt}"`;
-  else if (option === 'if_native') return if_native + `"${prompt}"`;
+  else if (option === 'if native') return if_native + `"${prompt}"`;
   else return null;
 }

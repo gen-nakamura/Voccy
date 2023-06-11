@@ -33,7 +33,7 @@ export default {
       questionInputHeight: 'auto',
       showOptions: false,
       waitForResponse: false,
-      options: ['new_word', 'word_usage', 'sentence_rephrase', 'これは英語で？', 'if_native'],
+      options: ['new word', 'word usage', 'sentence rephrase', 'これは英語で？', 'if native'],
     };
   },
   methods: {
