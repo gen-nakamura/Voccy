@@ -1,4 +1,5 @@
 import { Notification } from "electron";
+import { getSettings } from "./db";
 
 function calculateTimeRemaining(timesString) {
     console.log(timesString);
@@ -39,13 +40,15 @@ function showNotification(title, options) {
   
 //   console.log(remainingMilliseconds);
 
-export function scheduleNextNotification() {
-    if (process.env.remind_enabled !== 'true') {
+export async function scheduleNextNotification() {
+    let { remind_enabled, remind_times } = await getSettings();
+    console.log(remind_enabled, remind_times);
+    if (remind_enabled) {
         console.log('disabled');
       return; // 終了条件: 全ての通知が完了した場合
     }
   
-    const ms = calculateTimeRemaining(process.env.remind_times);
+    const ms = calculateTimeRemaining(remind_times);
   
     setTimeout(() => {
       showNotification('新しいメッセージ', {

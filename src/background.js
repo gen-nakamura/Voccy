@@ -7,6 +7,7 @@ const isDevelopment = process.env.NODE_ENV !== 'production'
 import { createServer } from './server/server'
 import axios from 'axios'
 import { scheduleNextNotification } from './server/notify'
+import { getSettings } from './server/db'
 
 require('update-electron-app')({
   repo: 'gen-nakamura/Voccy',
@@ -79,9 +80,9 @@ app.on('ready', async () => {
   });
   
   axios.post('http://localhost:3307/api/open_app')
-  .then(response => {
+  .then(async response => {
     console.log('open_app, res: ', response.status, response.statusText);
-    console.log(process.env.remind_times);
+    console.log(await getSettings());
     scheduleNextNotification();
   })
   .catch(error => {

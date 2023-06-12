@@ -5,6 +5,7 @@ const dbPath = path.join(app.getPath('userData'), './voccy.db'); // SQLiteデー
 const db = new sqlite3.Database(dbPath);
 import { calculateNextTestTimestamp, formatDateNow, convertToBindParameters } from './logic';
 import { testFunction, logFlashcardsTable, logSettingsTable } from './test';
+import { config } from './config'
 
 const createFlashcardsSQL = `
 CREATE TABLE IF NOT EXISTS flashcards (
@@ -209,9 +210,10 @@ function deleteFlashcard(id) {
 }
 
 function getQuizSets() {
-  return new Promise((resolve, reject) => {
+  return new Promise(async (resolve, reject) => {
     console.log('getQuizSets');
-    db.all(getQuizSetsSQL, [process.env.max_test_nums], function (error, data) {
+    const max_test_nums = getSettings().max_test_nums;
+    db.all(getQuizSetsSQL, [max_test_nums], function (error, data) {
       if (error) {
         reject(error);
       } else {
@@ -253,12 +255,6 @@ async function updateAllTheScheduledTestTimestamp() {
   });
 }
 
-async function setSettingsValueToProcessEnv() {
-  const data = await getSettings();
-  Object.assign(process.env, data);
-  console.log('set settings value to the process successfully');
-}
-
 // async/awaitを使用して非同期処理を扱う
 async function doSomethingAsync(question, answer) {
   console.log('dosomething');
@@ -279,7 +275,6 @@ async function openTheApp() {
     await createSettingsTable();
     await insertSettingsFirstValue();
     await createFlashcardsTable();
-    await setSettingsValueToProcessEnv();
   } catch (error) {
     console.log('catch error in openTheApp');
     throw new Error(error);
@@ -302,7 +297,6 @@ async function changeTheSettings(settings) {
   console.log('change the settings');
   try {
     await updateSettings(settings);
-    await setSettingsValueToProcessEnv();
     await updateAllTheScheduledTestTimestamp();
   } catch (error) {
     console.log('catch error in cahngeTheSettings');
