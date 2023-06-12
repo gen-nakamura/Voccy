@@ -67,17 +67,17 @@
           </tr>
         </thead>
         <tbody>
-          <tr>
+          <tr class="settings">
             <td style="width: 10%">
               <InputSwitch v-model="notificationEnabled" :disabled="!editSettings" />
             </td>
             <td style="width: 20%">
-              <input v-if="editSettings" type="text" v-model="settings.remind_times">
-              <span v-else :style="{opacity: !notificationEnabled ? '0.5' : '1'}">{{ settings.remind_times }}</span>
+              <textarea v-if="editSettings" type="text" v-model="settings.remind_times"></textarea>
+              <span v-else :style="{ opacity: !notificationEnabled ? '0.5' : '1' }">{{ settings.remind_times }}</span>
             </td>
             <td style="width: 10%">
               <input v-if="editSettings" type="text" v-model="settings.max_test_nums">
-              <span v-else :style="{opacity: !notificationEnabled ? '0.5' : '1'}">{{ settings.max_test_nums }}</span>
+              <span v-else :style="{ opacity: !notificationEnabled ? '0.5' : '1' }">{{ settings.max_test_nums }}</span>
             </td>
             <td style="width: 5%"></td>
             <td style="width: 5%">
@@ -145,6 +145,10 @@ td {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+}
+
+.settings td {
+  white-space: pre-line;
 }
 
 th {
@@ -247,7 +251,7 @@ export default {
           scheduled_test_timestamp: "2023-06-03 19:00",
         },
       ],
-      settings: {remind_enabled: 1},
+      settings: { remind_enabled: 1 },
       answerWithLineBreaksId: 0,
       editId: 0,
       editSettings: false,
@@ -318,7 +322,10 @@ export default {
       if (this.editSettings) {
         if (!this.isInteger(this.settings.max_test_nums)) {
           this.$toast.add({ severity: 'error', summary: 'Type Error', detail: 'the input must be an integer', life: 2000 });
-        } else {
+        } else if (!this.isValidFormat(this.settings.remind_times)) {
+          this.$toast.add({ severity: 'error', summary: 'Type Error', detail: 'the REMIND TIMES must follow a certain format.\n- Enclosed with []\n- Each time has to be enclosed with ""\n- All the times have to be split by ,', life: 5000 });
+        }
+        else {
           this.settings.remind_enabled = this.notificationEnabled ? 1 : 0;
           await axios.post('http://localhost:3307/api/change_settings', this.settings)
             .then(response => {
@@ -374,6 +381,25 @@ export default {
     },
     isInteger(value) {
       return !isNaN(Number(value)) && (Number.isInteger(Number(value)));
+    },
+    isValidFormat(jsonString) {
+      try {
+        const parsedData = JSON.parse(jsonString);
+        if (!Array.isArray(parsedData)) {
+          return false;
+        }
+
+        for (let i = 0; i < parsedData.length; i++) {
+          const timeRegex = /^\d{1,2}:\d{2}$/;
+          if (typeof parsedData[i] !== 'string' || !timeRegex.test(parsedData[i])) {
+            return false;
+          }
+        }
+
+        return true;
+      } catch (error) {
+        return false;
+      }
     },
     generateTestData() {
       function padZero(value) {
