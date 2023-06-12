@@ -114,7 +114,7 @@
 }
 
 .settings-container {
-  height: 25%;
+  height: 30%;
 }
 
 .table-container {
