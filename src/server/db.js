@@ -21,18 +21,18 @@ const insertQnASQL = 'INSERT INTO flashcards (question, answer, latest_test_time
 const createSettingsSQL = `
     CREATE TABLE IF NOT EXISTS settings (
       id INTEGER PRIMARY KEY,
+      remind_enabled INTEGER,
       remind_times TEXT,
-      remind_nums INTEGER,
       max_test_nums INTEGER
   );`
 const updateSettingsSQL = `
   UPDATE settings
   SET remind_times = $remind_times,
-      remind_nums = $remind_nums,
+      remind_enabled = $remind_enabled,
       max_test_nums = $max_test_nums
   WHERE id = 1`
 const insertSettingsSQL = `
-  INSERT OR IGNORE INTO settings (id, remind_times, remind_nums, max_test_nums)
+  INSERT OR IGNORE INTO settings (id, remind_times, remind_enabled, max_test_nums)
   VALUES (1, '["07:00", "13:00", "19:00"]', 3, 10);`;
 const updateFlashcardSQL = `
   UPDATE flashcards
@@ -372,7 +372,7 @@ function startTest() {
         await testFunction(db, addANewVocab, 'testQuestion5', 'testAnswer5');
         await testFunction(db, addANewVocab, 'testQuestion6', 'testAnswer6');
         await testFunction(db, updateTheFlashcard, { id: 1, question: 'updatedQuestion', answer: 'updatedAnswer', previous_result: 'cross', latest_result: 'circle', latest_test_timestamp: '2023-06-03 17:51', scheduled_test_timestamp: '2023-06-03 19:00' });
-        await testFunction(db, changeTheSettings, { remind_times: '["07:00", "11:00", "15:00", "19:00", "23:00"]', remind_nums: 5, max_test_nums: 3 });
+        await testFunction(db, changeTheSettings, { remind_times: '["07:00", "11:00", "15:00", "19:00", "23:00"]', remind_enabled: 1, max_test_nums: 3 });
         await testFunction(db, openTheFlashcardsTest);
         await testFunction(db, takeTheFlachcardsTest, { id: 3, previous_result: 'circle', latest_result: 'check', latest_test_timestamp: formatDateNow() });
         await testFunction(db, openTheListOfFlashcards, 5);

@@ -73,8 +73,8 @@
               <span v-else>{{ settings.remind_times }}</span>
             </td>
             <td style="width: 10%">
-              <input v-if="editSettings" type="text" v-model="settings.remind_nums">
-              <span v-else>{{ settings.remind_nums }}</span>
+              <input v-if="editSettings" type="text" v-model="settings.remind_enabled">
+              <span v-else>{{ settings.remind_enabled }}</span>
             </td>
             <td style="width: 10%">
               <input v-if="editSettings" type="text" v-model="settings.max_test_nums">
@@ -314,7 +314,7 @@ export default {
     },
     async changeSettings() {
       if (this.editSettings) {
-        if (!(this.isInteger(this.settings.remind_nums) && this.isInteger(this.settings.max_test_nums))) {
+        if (!this.isInteger(this.settings.max_test_nums)) {
           this.$toast.add({ severity: 'error', summary: 'Type Error', detail: 'the input must be an integer', life: 2000 });
         } else {
           await axios.post('http://localhost:3307/api/change_settings', this.settings)

@@ -80,8 +80,8 @@
 
 - settings
   - id
+  - remind_enabled
   - remind_times
-  - remind_nums
   - max_test_nums
 
 - test_records
