@@ -58,8 +58,8 @@
       <table>
         <thead>
           <tr>
+            <th style="width: 10%">Notification</th>
             <th style="width: 20%">Remind Times</th>
-            <th style="width: 10%">Remind Nums</th>
             <th style="width: 10%">Max Test Nums</th>
             <th style="width: 5%"></th>
             <th style="width: 5%"></th>
@@ -68,17 +68,16 @@
         </thead>
         <tbody>
           <tr>
+            <td style="width: 10%">
+              <InputSwitch v-model="notificationEnabled" :disabled="!editSettings" />
+            </td>
             <td style="width: 20%">
               <input v-if="editSettings" type="text" v-model="settings.remind_times">
-              <span v-else>{{ settings.remind_times }}</span>
-            </td>
-            <td style="width: 10%">
-              <input v-if="editSettings" type="text" v-model="settings.remind_enabled">
-              <span v-else>{{ settings.remind_enabled }}</span>
+              <span v-else :style="{opacity: !notificationEnabled ? '0.5' : '1'}">{{ settings.remind_times }}</span>
             </td>
             <td style="width: 10%">
               <input v-if="editSettings" type="text" v-model="settings.max_test_nums">
-              <span v-else>{{ settings.max_test_nums }}</span>
+              <span v-else :style="{opacity: !notificationEnabled ? '0.5' : '1'}">{{ settings.max_test_nums }}</span>
             </td>
             <td style="width: 5%"></td>
             <td style="width: 5%">
@@ -218,11 +217,13 @@ input[type="text"]:focus {
 import axios from 'axios';
 import ConfirmDialog from 'primevue/confirmdialog';
 import Toast from 'primevue/toast';
+import InputSwitch from 'primevue/inputswitch';
 
 export default {
   components: {
     ConfirmDialog,
-    Toast
+    Toast,
+    InputSwitch
   },
   data() {
     return {
@@ -246,10 +247,11 @@ export default {
           scheduled_test_timestamp: "2023-06-03 19:00",
         },
       ],
-      settings: {},
+      settings: {remind_enabled: 1},
       answerWithLineBreaksId: 0,
       editId: 0,
-      editSettings: false
+      editSettings: false,
+      notificationEnabled: true
     };
   },
   mounted() {
@@ -317,6 +319,7 @@ export default {
         if (!this.isInteger(this.settings.max_test_nums)) {
           this.$toast.add({ severity: 'error', summary: 'Type Error', detail: 'the input must be an integer', life: 2000 });
         } else {
+          this.settings.remind_enabled = this.notificationEnabled ? 1 : 0;
           await axios.post('http://localhost:3307/api/change_settings', this.settings)
             .then(response => {
               console.log('edit settings, res: ', response.status, response.statusText);
@@ -342,6 +345,7 @@ export default {
           console.log(response.data);
           this.settings = settings;
           this.flashcards = flashcards;
+          this.notificationEnabled = Boolean(settings.remind_enabled);
         })
         .catch(error => {
           // エラーレスポンスの処理
