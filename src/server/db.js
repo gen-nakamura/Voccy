@@ -33,7 +33,11 @@ const updateSettingsSQL = `
   WHERE id = 1`
 const insertSettingsSQL = `
   INSERT OR IGNORE INTO settings (id, remind_times, remind_enabled, max_test_nums)
-  VALUES (1, '["07:00", "13:00", "19:00"]', 3, 10);`;
+  VALUES (1, '["07:00", "13:00", "19:00"]', 1, 10);`;
+const insertFlashcardsFVSQL = `
+INSERT OR IGNORE INTO flashcards (id, question, answer, previous_result, latest_result, latest_test_timestamp, scheduled_test_timestamp)
+VALUES (1, 'This is a Question. Click to show an Answer', 'This is an Answer! You are ready to start.\n\n Click the check circle at the very left.', 'check', 'check', '2022-01-01 12:00', '2022-01-01 15:00');
+`;
 const updateFlashcardSQL = `
   UPDATE flashcards
   SET question = $question,
@@ -83,6 +87,21 @@ function insertSettingsFirstValue() {
     });
   });
 }
+
+function insertFlashcardsFirstValue() {
+  return new Promise((resolve, reject) => {
+    console.log('insertFlashcardsFirstValue');
+    db.run(insertFlashcardsFVSQL, error => {
+      if (error) {
+        reject(error);
+      } else {
+        console.log('inserted flashcards first value successfully');
+        resolve();
+      }
+    });
+  });
+}
+
 function updateSettings(settings) {
   return new Promise((resolve, reject) => {
     console.log('updateSettings');
@@ -275,6 +294,7 @@ async function openTheApp() {
     await createSettingsTable();
     await insertSettingsFirstValue();
     await createFlashcardsTable();
+    await insertFlashcardsFirstValue()
   } catch (error) {
     console.log('catch error in openTheApp');
     throw new Error(error);
