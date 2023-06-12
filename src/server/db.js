@@ -5,7 +5,7 @@ const dbPath = path.join(app.getPath('userData'), './voccy.db'); // SQLiteデー
 const db = new sqlite3.Database(dbPath);
 import { calculateNextTestTimestamp, formatDateNow, convertToBindParameters } from './logic';
 import { testFunction, logFlashcardsTable, logSettingsTable } from './test';
-import { config } from './config'
+import { scheduleNextNotification } from './notify';
 
 const createFlashcardsSQL = `
 CREATE TABLE IF NOT EXISTS flashcards (
@@ -298,6 +298,8 @@ async function changeTheSettings(settings) {
   try {
     await updateSettings(settings);
     await updateAllTheScheduledTestTimestamp();
+    clearTimeout(process.env.notificationId);
+    scheduleNextNotification();
   } catch (error) {
     console.log('catch error in cahngeTheSettings');
     throw new Error(error);

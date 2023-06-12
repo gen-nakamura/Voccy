@@ -22,8 +22,10 @@ function calculateTimeRemaining(timesString) {
   
       if (remaining >= 0 && remaining < timeRemaining) {
         timeRemaining = remaining;
+        console.log(time);
       }
     }
+    console.log('↑this is the set time');
   
     return timeRemaining;
   }
@@ -43,14 +45,14 @@ function showNotification(title, options) {
 export async function scheduleNextNotification() {
     let { remind_enabled, remind_times } = await getSettings();
     console.log(remind_enabled, remind_times);
-    if (remind_enabled) {
-        console.log('disabled');
-      return; // 終了条件: 全ての通知が完了した場合
-    }
+    // if (remind_enabled) {
+    //     console.log('disabled');
+    //   return; // 終了条件: 全ての通知が完了した場合
+    // }
   
     const ms = calculateTimeRemaining(remind_times);
   
-    setTimeout(() => {
+    process.env.notificationId = setTimeout(() => {
       showNotification('新しいメッセージ', {
         body: '新しいメッセージが届きました。'
       });
