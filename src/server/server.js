@@ -139,17 +139,5 @@ export function createServer() {
             res.status(500).json({ error: 'Internal Server Error' });
         }
     });
-
-    server.post('/api/change_settings', async (req, res) => {
-        console.log('/api/change_settings');
-        try {
-            await changeTheSettings(req.body);
-            res.json({ success: true });
-        } catch (error) {
-            console.error('error in /api/change_settings: ', error);
-            res.status(500).json({ error: 'Internal Server Error' });
-        }
-    });
-
     return server;
 };
