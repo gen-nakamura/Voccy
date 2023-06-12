@@ -44,13 +44,14 @@ function showNotification(title, options) {
 
 export async function scheduleNextNotification() {
     let { remind_enabled, remind_times } = await getSettings();
+    console.log(remind_enabled, remind_times);
     const ms = calculateTimeRemaining(remind_times);
     
     process.env.notificationId = setTimeout(async () => {
-        const taskExists = await getQuizSets().then(quizSets => quizSets.length);
-        if (taskExists && remind_enabled) {
-            showNotification('新しいメッセージ', {
-                body: '新しいメッセージが届きました。'
+        const quizNums = await getQuizSets().then(quizSets => quizSets.length);
+        if (quizNums && remind_enabled) {
+            showNotification('学習の時間です！', {
+                body: `${quizNums}件の学習タスクがあります。`
             });
         }
       // 次の通知をスケジュールする
