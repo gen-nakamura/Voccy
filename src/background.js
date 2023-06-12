@@ -6,6 +6,8 @@ import installExtension, { VUEJS3_DEVTOOLS } from 'electron-devtools-installer'
 const isDevelopment = process.env.NODE_ENV !== 'production'
 import { createServer } from './server/server'
 import axios from 'axios'
+import { scheduleNextNotification } from './server/notify'
+
 require('update-electron-app')({
   repo: 'gen-nakamura/Voccy',
   updateInterval: '1 hour',
@@ -18,7 +20,7 @@ protocol.registerSchemesAsPrivileged([
   { scheme: 'app', privileges: { secure: true, standard: true } }
 ])
 
-async function createWindow() {
+async function createWindow() {  
   // Create the browser window.
   const win = new BrowserWindow({
     width: 1200,
@@ -62,8 +64,7 @@ app.on('activate', () => {
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
-app.on('ready', async () => {
-
+app.on('ready', async () => {  
   if (isDevelopment && !process.env.IS_TEST) {
     // Install Vue Devtools
     try {
@@ -76,17 +77,19 @@ app.on('ready', async () => {
   server.listen(3307, () => {
     console.log('Server running on port 3307');
   });
-
+  
   axios.post('http://localhost:3307/api/open_app')
-    .then(response => {
-      console.log('open_app, res: ', response.status, response.statusText);
-    })
-    .catch(error => {
-      // エラーレスポンスの処理
-      console.error('Error in request:', error);
-    });
-
-  createWindow()
+  .then(response => {
+    console.log('open_app, res: ', response.status, response.statusText);
+    console.log(process.env.remind_times);
+    scheduleNextNotification();
+  })
+  .catch(error => {
+    // エラーレスポンスの処理
+    console.error('Error in request:', error);
+  });
+  
+  createWindow();
 })
 
 // Exit cleanly on request from parent process in development mode.
