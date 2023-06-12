@@ -212,7 +212,7 @@ function deleteFlashcard(id) {
 function getQuizSets() {
   return new Promise(async (resolve, reject) => {
     console.log('getQuizSets');
-    const max_test_nums = getSettings().max_test_nums;
+    const { max_test_nums } = await getSettings();
     db.all(getQuizSetsSQL, [max_test_nums], function (error, data) {
       if (error) {
         reject(error);
@@ -387,7 +387,7 @@ function startTest() {
   });
 }
 
-export { openTheApp, addANewVocab, updateTheFlashcard, changeTheSettings, openTheFlashcardsTest, takeTheFlachcardsTest, openTheListOfFlashcards, deleteTheFlashcard, getSettings }
+export { openTheApp, addANewVocab, updateTheFlashcard, changeTheSettings, openTheFlashcardsTest, takeTheFlachcardsTest, openTheListOfFlashcards, deleteTheFlashcard, getSettings, getQuizSets }
 
 // serverで確かめる。テストデータを用意する
 // chatGPTに任せる。前後をわかりやすく出力させる

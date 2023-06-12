@@ -1,5 +1,5 @@
 import { Notification } from "electron";
-import { getSettings } from "./db";
+import { getQuizSets, getSettings } from "./db";
 
 function calculateTimeRemaining(timesString) {
     console.log(timesString);
@@ -51,11 +51,14 @@ export async function scheduleNextNotification() {
     // }
   
     const ms = calculateTimeRemaining(remind_times);
-  
-    process.env.notificationId = setTimeout(() => {
-      showNotification('新しいメッセージ', {
-        body: '新しいメッセージが届きました。'
-      });
+    
+    process.env.notificationId = setTimeout(async () => {
+        const taskExists = await getQuizSets().then(quizSets => quizSets.length);
+        if (taskExists) {
+            showNotification('新しいメッセージ', {
+                body: '新しいメッセージが届きました。'
+            });
+        }
       // 次の通知をスケジュールする
       scheduleNextNotification();
     }, ms);
