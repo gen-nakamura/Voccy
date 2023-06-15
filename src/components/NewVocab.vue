@@ -1,4 +1,7 @@
 <template>
+  <Dialog v-model:visible="versionInfo" modal header="Update Info 🎊" :style="{ width: '75vw' }">
+    <pre>{{ versionInfo }}</pre>
+  </Dialog>
   <div class="form-container" ref="parent" style="opacity: 0; transition: opacity 0.25s;">
     <div class="input-block">
       <textarea v-model="questionInput" placeholder="Write a question" class="input-field input-question"
@@ -23,9 +26,13 @@
 <script>
 import axios from 'axios';
 import { createCompletion } from '@/server/api';
+import Dialog from 'primevue/dialog';
 
 export default {
   name: 'NewVocab',
+  components: {
+    Dialog
+  },
   data() {
     return {
       questionInput: '',
@@ -34,6 +41,7 @@ export default {
       showOptions: false,
       waitForResponse: false,
       options: ['new word', 'word usage', 'sentence rephrase', 'これは英語で？', 'if native'],
+      versionInfo: null
     };
   },
   methods: {
@@ -85,6 +93,7 @@ export default {
           console.log('ver_info, res: ', response.status, response.statusText);
           console.log(response.data);
           // update information, hasNotified
+          this.versionInfo = response.data.data;
         })
         .catch(error => {
           // エラーレスポンスの処理

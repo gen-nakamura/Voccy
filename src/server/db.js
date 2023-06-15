@@ -103,13 +103,16 @@ function versionNotifyOrIgnore() {
         // console.log(`バージョン ${version} の存在: ${result === 1 ? '存在する' : '存在しない'}`);
         if (result) {
           resolve(null);
+        } else if (!(releaseNotes[version])) {
+          console.log('there is no release note');
+          resolve(null);
         } else {
           db.run(addNotifiedVersion, [version], error => {
             if (error) {
               reject(error);
             } else {
               console.log('added notified version successfully');
-              resolve('release note content :)');
+              resolve(releaseNotes[version]);
             }
           })
         }
