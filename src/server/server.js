@@ -1,7 +1,6 @@
-import { addANewVocab, changeTheSettings, deleteTheFlashcard, doSomethingAsync, getSettings, openTheApp, openTheFlashcardsTest, openTheListOfFlashcards, startTest, takeTheFlachcardsTest, updateTheFlashcard } from './db';
+import { addANewVocab, changeTheSettings, deleteTheFlashcard, doSomethingAsync, getSettings, openTheApp, openTheFlashcardsTest, openTheListOfFlashcards, startTest, takeTheFlachcardsTest, updateTheFlashcard, versionNotifyOrIgnore } from './db';
 const express = require('express');
-const version = require('/package.json').version;
-import { releaseNotes } from './releaseNotes';
+
 export function createServer() {
     const server = express();
     
@@ -16,21 +15,11 @@ export function createServer() {
     
     server.post('/api/ver_info', async (req, res) => {
         console.log('/api/ver_info');
-        console.log(process.env.notifiedVersion);
-        console.log(version);
-        console.log(releaseNotes);
         try {
-            if (version === process.env.notifiedVersion) {
-                console.log('in if');
-                res.json({ success: true, data: {hasChanged: false} });
-            } else {
-                console.log('in else');
-                process.env.notifiedVersion = version;
-                console.log(process.env.notifiedVersion);
-                res.json({ success: true, data: {releaseNote: releaseNotes[version], hasChanged: true} });
-            }
+            const releaseNote = await versionNotifyOrIgnore();
+            res.json({ success: true, data: releaseNote });
         } catch (error) {
-            console.log('error in db operation: ', error);
+            console.log('error in /api/ver_info: ', error);
             res.status(500).json({ error: 'Internal Server Error' });
         }
     });

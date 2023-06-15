@@ -6,7 +6,16 @@ const db = new sqlite3.Database(dbPath);
 import { calculateNextTestTimestamp, formatDateNow, convertToBindParameters } from './logic';
 import { testFunction, logFlashcardsTable, logSettingsTable } from './test';
 import { scheduleNextNotification } from './notify';
+const version = require('/package.json').version;
+import { releaseNotes } from './releaseNotes';
 
+const createNotifiedVersionsSQL = `
+CREATE TABLE IF NOT EXISTS notified_versions (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  version TEXT UNIQUE
+  );`;
+const ifVersionHasNotified = `SELECT EXISTS (SELECT 1 FROM notified_versions WHERE version = ?) AS result`;
+const addNotifiedVersion = 'INSERT INTO notified_versions (version) VALUES (?);'
 const createRecordsSQL = `
 CREATE TABLE IF NOT EXISTS records (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -67,6 +76,47 @@ const getSettingsSQL = 'SELECT * FROM settings WHERE id = 1';
 const getAllFlashcardsSQL = 'SELECT * FROM flashcards LIMIT ?';
 const getQuizSetsSQL = `SELECT * FROM flashcards WHERE scheduled_test_timestamp IS NOT NULL AND scheduled_test_timestamp < strftime('%Y-%m-%d %H:%M', 'now') ORDER BY datetime(scheduled_test_timestamp) ASC LIMIT ?;`;
 const getFlashcardSQL = 'SELECT * FROM flashcards WHERE id = ?';
+
+// NotifiedVersions table
+function createNotifiedVersionsTable() {
+  return new Promise((resolve, reject) => {
+    console.log('createNotifiedVersionsTable');
+    db.run(createNotifiedVersionsSQL, error => {
+      if (error) {
+        reject(error);
+      } else {
+        console.log('notified_versions table created successfully or it already exists');
+        resolve();
+      }
+    })
+  })
+}
+
+function versionNotifyOrIgnore() {
+  return new Promise((resolve, reject) => {
+    console.log('versionNotifyOrIgnore');
+    db.get(ifVersionHasNotified, [version], (err, row) => {
+      if (err) {
+        reject(err);
+      } else {
+        const result = row.result;
+        // console.log(`バージョン ${version} の存在: ${result === 1 ? '存在する' : '存在しない'}`);
+        if (result) {
+          resolve(null);
+        } else {
+          db.run(addNotifiedVersion, [version], error => {
+            if (error) {
+              reject(error);
+            } else {
+              console.log('added notified version successfully');
+              resolve('release note content :)');
+            }
+          })
+        }
+      }
+    });
+  })
+}
 
 // Records table
 function createRecordsTable() {
@@ -320,6 +370,7 @@ async function openTheApp() {
     await createFlashcardsTable();
     await insertFlashcardsFirstValue();
     await createRecordsTable();
+    await createNotifiedVersionsTable();
   } catch (error) {
     console.log('catch error in openTheApp');
     throw new Error(error);
@@ -381,7 +432,7 @@ async function openTheListOfFlashcards(limit) {
   try {
     const flashcards = await getAllFlashcards(limit);
     const settings = await getSettings();
-    return { flashcards: flashcards, settings: settings};
+    return { flashcards: flashcards, settings: settings };
   } catch (error) {
     console.log('catch error in openTheListOfFlashcards');
     throw new Error(error);
@@ -434,7 +485,7 @@ function startTest() {
   });
 }
 
-export { openTheApp, addANewVocab, updateTheFlashcard, changeTheSettings, openTheFlashcardsTest, takeTheFlachcardsTest, openTheListOfFlashcards, deleteTheFlashcard, getSettings, getQuizSets }
+export { openTheApp, addANewVocab, updateTheFlashcard, changeTheSettings, openTheFlashcardsTest, takeTheFlachcardsTest, openTheListOfFlashcards, deleteTheFlashcard, getSettings, getQuizSets, versionNotifyOrIgnore }
 
 // serverで確かめる。テストデータを用意する
 // chatGPTに任せる。前後をわかりやすく出力させる
