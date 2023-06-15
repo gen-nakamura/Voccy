@@ -11,8 +11,11 @@ const createRecordsSQL = `
 CREATE TABLE IF NOT EXISTS records (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
   event TEXT,
-  timestamp TEXT
+  timestamp TEXT,
+  flashcard_id INTEGER,
+  FOREIGN KEY (flashcard_id) REFERENCES flashcards (id)
   );`;
+const insertNewRecordSQL = `INSERT INTO records (event, timestamp, flashcard_id) VALUES (?, ?, ?);`;
 const createFlashcardsSQL = `
 CREATE TABLE IF NOT EXISTS flashcards (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -80,6 +83,20 @@ function createRecordsTable() {
   })
 }
 
+function insertNewRecord(event, flashcard_id) {
+  return new Promise((resolve, reject) => {
+    console.log('insertNewRecord');
+    db.run(insertNewRecordSQL, [event, formatDateNow(), flashcard_id], error => {
+      if (error) {
+        reject(error);
+      } else {
+        console.log('inserted a new record successfully');
+        resolve();
+      }
+    });
+  })
+}
+
 // Settings table
 function createSettingsTable() {
   return new Promise((resolve, reject) => {
@@ -103,20 +120,6 @@ function insertSettingsFirstValue() {
         reject(error);
       } else {
         console.log('inserted settings first value successfully');
-        resolve();
-      }
-    });
-  });
-}
-
-function insertFlashcardsFirstValue() {
-  return new Promise((resolve, reject) => {
-    console.log('insertFlashcardsFirstValue');
-    db.run(insertFlashcardsFVSQL, error => {
-      if (error) {
-        reject(error);
-      } else {
-        console.log('inserted flashcards first value successfully');
         resolve();
       }
     });
@@ -160,6 +163,20 @@ function createFlashcardsTable() {
         reject(error);
       } else {
         console.log('flashcards table created successfully or it already exists');
+        resolve();
+      }
+    });
+  });
+}
+
+function insertFlashcardsFirstValue() {
+  return new Promise((resolve, reject) => {
+    console.log('insertFlashcardsFirstValue');
+    db.run(insertFlashcardsFVSQL, error => {
+      if (error) {
+        reject(error);
+      } else {
+        console.log('inserted flashcards first value successfully');
         resolve();
       }
     });
@@ -315,6 +332,7 @@ async function addANewVocab(question, answer) {
     const flashcard = await insertQnA(question, answer);
     const newFlashcard = calculateNextTestTimestamp(flashcard);
     await updateFlashcard(newFlashcard);
+    await insertNewRecord('add', flashcard.id);
   } catch (error) {
     console.log('catch error in addANewVocab');
     throw new Error(error);
@@ -351,6 +369,7 @@ async function takeTheFlachcardsTest(testRecords) {
     const flashcard = await recordTestResults(testRecords);
     const newFlashcard = calculateNextTestTimestamp(flashcard);
     await updateFlashcard(newFlashcard);
+    await insertNewRecord('study', flashcard.id);
   } catch (error) {
     console.log('catch error in takeTheFlashcardsTest');
     throw new Error(error);
