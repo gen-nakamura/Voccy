@@ -11,7 +11,6 @@ import { getSettings } from './server/db'
 
 require('update-electron-app')({
   repo: 'gen-nakamura/Voccy',
-  updateInterval: '1 hour',
   logger: require('electron-log')
 })
 
