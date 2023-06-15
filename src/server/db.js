@@ -7,6 +7,13 @@ import { calculateNextTestTimestamp, formatDateNow, convertToBindParameters } fr
 import { testFunction, logFlashcardsTable, logSettingsTable } from './test';
 import { scheduleNextNotification } from './notify';
 
+const createRecordsSQL = `
+CREATE TABLE IF NOT EXISTS records (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  event TEXT,
+  timestamp TEXT,
+  )
+`;
 const createFlashcardsSQL = `
 CREATE TABLE IF NOT EXISTS flashcards (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -58,6 +65,20 @@ const getSettingsSQL = 'SELECT * FROM settings WHERE id = 1';
 const getAllFlashcardsSQL = 'SELECT * FROM flashcards LIMIT ?';
 const getQuizSetsSQL = `SELECT * FROM flashcards WHERE scheduled_test_timestamp IS NOT NULL AND scheduled_test_timestamp < strftime('%Y-%m-%d %H:%M', 'now') ORDER BY datetime(scheduled_test_timestamp) ASC LIMIT ?;`;
 const getFlashcardSQL = 'SELECT * FROM flashcards WHERE id = ?';
+
+// Records table
+function createRecordsTable() {
+  return new Promise((resolve, reject) => {
+    db.run(createRecordsSQL, error => {
+      if (error) {
+        reject(error);
+      } else {
+        console.log('records table created successfully or it already exists');
+        resolve();
+      }
+    })
+  })
+}
 
 // Settings table
 function createSettingsTable() {
@@ -274,27 +295,14 @@ async function updateAllTheScheduledTestTimestamp() {
   });
 }
 
-// async/awaitを使用して非同期処理を扱う
-async function doSomethingAsync(question, answer) {
-  console.log('dosomething');
-  try {
-    await createSettingsTable();
-    await insertSettingsFirstValue();
-    await createFlashcardsTable();
-    await insertQnA(question, answer);
-  } catch (error) {
-    console.log('catch error in dosth');
-    throw new Error(error);
-  }
-}
-
 async function openTheApp() {
   console.log('open the app');
   try {
     await createSettingsTable();
     await insertSettingsFirstValue();
     await createFlashcardsTable();
-    await insertFlashcardsFirstValue()
+    await insertFlashcardsFirstValue();
+    await createRecordsTable();
   } catch (error) {
     console.log('catch error in openTheApp');
     throw new Error(error);
