@@ -14,13 +14,12 @@ require('update-electron-app')({
   logger: require('electron-log')
 })
 
-
 // Scheme must be registered before the app is ready
 protocol.registerSchemesAsPrivileged([
   { scheme: 'app', privileges: { secure: true, standard: true } }
 ])
 
-async function createWindow() {  
+async function createWindow() {
   // Create the browser window.
   const win = new BrowserWindow({
     width: 1200,
@@ -64,7 +63,7 @@ app.on('activate', () => {
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
-app.on('ready', async () => {  
+app.on('ready', async () => {
   if (isDevelopment && !process.env.IS_TEST) {
     // Install Vue Devtools
     try {
@@ -77,18 +76,18 @@ app.on('ready', async () => {
   server.listen(3307, () => {
     console.log('Server running on port 3307');
   });
-  
+
   axios.post('http://localhost:3307/api/open_app')
-  .then(async response => {
-    console.log('open_app, res: ', response.status, response.statusText);
-    console.log(await getSettings());
-    scheduleNextNotification();
-  })
-  .catch(error => {
-    // エラーレスポンスの処理
-    console.error('Error in request:', error);
-  });
-  
+    .then(async response => {
+      console.log('open_app, res: ', response.status, response.statusText);
+      console.log(await getSettings());
+      scheduleNextNotification();
+    })
+    .catch(error => {
+      // エラーレスポンスの処理
+      console.error('Error in request:', error);
+    });
+
   createWindow();
 })
 

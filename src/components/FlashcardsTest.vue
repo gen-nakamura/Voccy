@@ -113,8 +113,8 @@ export default {
       content.offsetHeight; // 強制的にリフローを行い、変更したスタイルが反映されることを保証します
 
       content.style.transition = "height 0.25s ease";
-      console.log(originalHeight);
-      console.log(question.clientHeight);
+      // console.log(originalHeight);
+      // console.log(question.clientHeight);
       // TODO テキストのフェードも実装する
       if (this.showingAnswer) {
         content.style.height = this.questionAndAnswerHeight + "px";
