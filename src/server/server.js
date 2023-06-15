@@ -1,10 +1,10 @@
 import { addANewVocab, changeTheSettings, deleteTheFlashcard, doSomethingAsync, getSettings, openTheApp, openTheFlashcardsTest, openTheListOfFlashcards, startTest, takeTheFlachcardsTest, updateTheFlashcard } from './db';
 const express = require('express');
 const version = require('/package.json').version;
-
+import { releaseNotes } from './releaseNotes';
 export function createServer() {
     const server = express();
-
+    
     server.use(express.json());
     // CORS設定  
     server.use((req, res, next) => {
@@ -13,11 +13,22 @@ export function createServer() {
         res.setHeader('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
         next();
     });
-
+    
     server.post('/api/ver_info', async (req, res) => {
         console.log('/api/ver_info');
+        console.log(process.env.notifiedVersion);
+        console.log(version);
+        console.log(releaseNotes);
         try {
-            res.json({ success: true, data: version });
+            if (version === process.env.notifiedVersion) {
+                console.log('in if');
+                res.json({ success: true, data: {hasChanged: false} });
+            } else {
+                console.log('in else');
+                process.env.notifiedVersion = version;
+                console.log(process.env.notifiedVersion);
+                res.json({ success: true, data: {releaseNote: releaseNotes[version], hasChanged: true} });
+            }
         } catch (error) {
             console.log('error in db operation: ', error);
             res.status(500).json({ error: 'Internal Server Error' });
