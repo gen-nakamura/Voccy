@@ -79,15 +79,28 @@ export default {
       this.waitForResponse = false;
       this.answerInput = text.trimLeft();
     },
+    getVersionInformation() {
+      axios.post('http://localhost:3307/api/ver_info')
+        .then(response => {
+          console.log('ver_info, res: ', response.status, response.statusText);
+          console.log(response.data);
+          // update information, hasNotified
+        })
+        .catch(error => {
+          // エラーレスポンスの処理
+          console.error('Error in request:', error);
+        });
+    },
+  },
+  created() {
+    window.addEventListener('click', this.handleGlobalClick);
   },
   mounted() {
     this.$nextTick(() => {
       this.adjustQuestionInputHeight();
       this.$refs.parent.style = "opacity: 1; transition: opacity 0.25s; transition-delay: 0.5s;"
     });
-  },
-  created() {
-    window.addEventListener('click', this.handleGlobalClick);
+    this.getVersionInformation();
   },
   beforeUnmount() {
     window.removeEventListener('click', this.handleGlobalClick);

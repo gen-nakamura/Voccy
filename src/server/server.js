@@ -1,5 +1,6 @@
 import { addANewVocab, changeTheSettings, deleteTheFlashcard, doSomethingAsync, getSettings, openTheApp, openTheFlashcardsTest, openTheListOfFlashcards, startTest, takeTheFlachcardsTest, updateTheFlashcard } from './db';
 const express = require('express');
+const version = require('/package.json').version;
 
 export function createServer() {
     const server = express();
@@ -13,17 +14,15 @@ export function createServer() {
         next();
     });
 
-    // server.post('/api/data', async (req, res) => {
-    //     console.log('get a post request');
-    //     const { questionInput, answerInput } = req.body;
-    //     try {
-    //         await startTest();
-    //         res.json({ success: true });
-    //     } catch (error) {
-    //         console.log('error in db operation: ', error);
-    //         res.status(500).json({ error: 'Internal Server Error' });
-    //     }
-    // });
+    server.post('/api/ver_info', async (req, res) => {
+        console.log('/api/ver_info');
+        try {
+            res.json({ success: true, data: version });
+        } catch (error) {
+            console.log('error in db operation: ', error);
+            res.status(500).json({ error: 'Internal Server Error' });
+        }
+    });
 
     server.post('/api/open_app', async (req, res) => {
         console.log('/api/open_app');
