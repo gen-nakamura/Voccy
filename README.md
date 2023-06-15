@@ -84,7 +84,8 @@
   - remind_times
   - max_test_nums
 
-- test_records
+- records
+  - event (add, study)
   - time
 
 - quota_failures
@@ -95,12 +96,12 @@
   - [x] create settings
   - [x] insert first settings value
   - [x] set process.env
-  - [ ] create test_records
+  - [x] create test_records
   - [ ] create quota_failures
 - [x] when you add a new vocab
   - [x] insert QnA
   - [x] update the scheduled test timestamp
-- [ ] when you change the settings
+- [x] when you change the settings
   - [x] update settings
   - [x] set process.env
   - [x] update all the scheduled test timestamp
@@ -164,8 +165,8 @@
 
 - [x] reminder時間を計算する関数
   - [x] configがアップデートされる度に呼び出す
-  - [ ] 時間トリガーも変更する
-- [ ] 時間でトリガー発生させる
+  - [x] 時間トリガーも変更する
+- [x] 時間でトリガー発生させる
 - [ ] 名詞を画像と一緒に覚える
 - [ ] どのくらいやったかの記録、時間帯の判定
 - [ ] ノルマクリアのステータス
@@ -177,9 +178,27 @@
 - [ ] 発音記号
 - [ ] 音声
 - [ ] 品詞の指定　
-- [ ] 初期のチュートリアル値の設定
+- [x] 初期のチュートリアル値の設定
 - [ ] ショートカットキーの実装
-- [ ] 回答後のエフェクト→なしでいいんじゃない？
+- [x] 回答後のエフェクト→なしでいいんじゃない？
+
+- [ ] 集計する必要のあるデータ
+  - 単語を追加した時
+    - 時間
+  - 学習した時
+    - 時間
+
+- [ ] 学習データの集計について
+  - 一日に追加した単語数、累計
+  - 一日に学習した単語数、累計
+  - 一日の平均追加単語数
+  - 一日の平均学習単語数
+  - done: 完璧に覚えた単語数
+  - check: ほとんど覚えた単語数
+  - circle: ある程度覚えた単語数
+  - null, cross: needs to be improved
+  - circle, check, doneになるまでの平均学習回数
+  - 直近1ヶ月、一週間などで上記のデータ
 
 - [x] download the app, initialize
 - [ ] update settings
