@@ -11,9 +11,8 @@ const createRecordsSQL = `
 CREATE TABLE IF NOT EXISTS records (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
   event TEXT,
-  timestamp TEXT,
-  )
-`;
+  timestamp TEXT
+  );`;
 const createFlashcardsSQL = `
 CREATE TABLE IF NOT EXISTS flashcards (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -69,6 +68,7 @@ const getFlashcardSQL = 'SELECT * FROM flashcards WHERE id = ?';
 // Records table
 function createRecordsTable() {
   return new Promise((resolve, reject) => {
+    console.log('createRecordsTable');
     db.run(createRecordsSQL, error => {
       if (error) {
         reject(error);

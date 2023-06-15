@@ -112,7 +112,7 @@ export function createServer() {
             const data = await openTheListOfFlashcards(limit);
             res.json({ success: true, data });
         } catch (error) {
-            console.error('error in /api/open_app: ', error);
+            console.error('error in /api/open_config: ', error);
             res.status(500).json({ error: 'Internal Server Error' });
         }
     });
