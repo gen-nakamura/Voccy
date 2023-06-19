@@ -54,7 +54,7 @@ const insertSettingsSQL = `
   VALUES (1, '["07:00", "13:00", "19:00"]', 1, 10);`;
 const insertFlashcardsFVSQL = `
 INSERT OR IGNORE INTO flashcards (id, question, answer, previous_result, latest_result, latest_test_timestamp, scheduled_test_timestamp)
-VALUES (1, 'This is a Question. Click to show an Answer', 'This is an Answer! You are ready to start.\n\n Click the check circle at the very left.', 'check', 'check', '2022-01-01 12:00', '2022-01-01 15:00');
+VALUES (1, 'This is a Question. Click to show an Answer', 'This is an Answer! You are ready to start.\n\n Click the check circle at the very right.', 'check', 'check', '2022-01-01 12:00', '2022-01-01 15:00');
 `;
 const updateFlashcardSQL = `
   UPDATE flashcards
