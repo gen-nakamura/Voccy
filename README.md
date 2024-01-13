@@ -1,3 +1,6 @@
+# プロジェクトページ
+https://marshy-willow-1d1.notion.site/Voccy-177a3f578f71492a8b1e56d7ec786429?pvs=4
+
 # Voccy
 - [x] something you want to achieve 
 - [x] option + C to check the mark
