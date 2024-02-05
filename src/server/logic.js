@@ -1,23 +1,24 @@
 // the function returns which flashcards_id to be the one you need to do.
 // ordered by a schedule test time, then return first 5 elements.
 // 変更されたレコードに対して、settingsが変わった時に全体に対して
-const NULL_NULL = 1;
-const NULL_CROSS = 1;
-const NULL_CIRCLE = 1.5;
-const NULL_CHECK = 7;
+REMIND_RATE = 0.5
+const NULL_NULL = 0.2;
+const NULL_CROSS = 0.5;
+const NULL_CIRCLE = 1;
+const NULL_CHECK = 2;
 
 const CROSS_NULL = null;
-const CROSS_CROSS = 1;
-const CROSS_CIRCLE = 2;
-const CROSS_CHECK = 3;
+const CROSS_CROSS = 0.5;
+const CROSS_CIRCLE = 1;
+const CROSS_CHECK = 2;
 
 const CIRCLE_NULL = null;
-const CIRCLE_CROSS = 1;
+const CIRCLE_CROSS = 0.5;
 const CIRCLE_CIRCLE = 3;
-const CIRCLE_CHECK = 6;
+const CIRCLE_CHECK = 4;
 
 const CHECK_NULL = null;
-const CHECK_CROSS = 1;
+const CHECK_CROSS = 0.5;
 const CHECK_CIRCLE = 3;
 const CHECK_CHECK = 30;
 
@@ -89,7 +90,7 @@ function getRandomInterval(days) {
 }
 
 export function calculateNextTestTimestamp(data) {
-  const interval = calcFromResult(data.previous_result, data.latest_result);
+  const interval = calcFromResult(data.previous_result, data.latest_result) * REMIND_RATE;
   const randomInterval = getRandomInterval(interval);
   data.scheduled_test_timestamp = addDate(data.latest_test_timestamp, randomInterval);
   return data;
