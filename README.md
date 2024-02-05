@@ -257,6 +257,10 @@ nvm use 16
 which python
 export PYTHON_PATH=/Library/Frameworks/Python.framework/Versions/2.7/bin/python
 npm run electron:build
+
+# latest
+nvm use 16
+npm run dev
 ```
 ### When build/distribution
 add self sign
