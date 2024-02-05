@@ -5,11 +5,11 @@ const new_word =
 Show whether the one is used in formal, real-life conversation or both situations.
 Give 2 example sentences which are shorter than 20 words used in the situation above. If used in both situations, the example sentences would be 2 each, 4 in total.
 Then provide the 2 most frequently used expressions that can be used instead; Rephrasing.
-All the responses should be provided in the format shown with the back quote below.
+All the responses should be provided in the format shown with the back-quote below.
 format: \`
 Definition: A BRIEF DEFINITION
 
-Use: [formal, real-life conversation, both] ONE OF THESE
+Use: [formal, real-life conversation, both] CHOOSE ONE OF THESE
 
 formal: 
 • EXAMPLE SENTENCE 1
@@ -99,14 +99,14 @@ const http = axios.create({
 export async function createCompletion(option, prompt) {
   try {
     console.log("inside try");
-    const res = await http.post('/completions', {
-      "model": "text-davinci-003",
-      "prompt": createChatGPTCommand(option, prompt),
+    const res = await http.post('/chat/completions', {
+      "model": "gpt-3.5-turbo-0125",
+      "messages": [{"role": "user", "content": createChatGPTCommand(option, prompt)}],
       "temperature": 0,
       "max_tokens": 150
     })
     console.log(res);
-    const text = res.data.choices[0].text;
+    const text = res.data.choices[0].message.content;
     console.log(text);
     return text;
   } catch (error) {
