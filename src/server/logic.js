@@ -1,7 +1,7 @@
 // the function returns which flashcards_id to be the one you need to do.
 // ordered by a schedule test time, then return first 5 elements.
 // 変更されたレコードに対して、settingsが変わった時に全体に対して
-REMIND_RATE = 0.5
+const REMIND_RATE = 0.5
 const NULL_NULL = 0.2;
 const NULL_CROSS = 0.5;
 const NULL_CIRCLE = 1;
