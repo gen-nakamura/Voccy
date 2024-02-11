@@ -4,7 +4,11 @@
   <div id="page">
     <div class="container flashcards-container"
       :style="{ height: (editId === 0 && answerWithLineBreaksId === 0) ? '60%' : '90%' }">
-      <h2>Flashcards</h2>
+      <div class="FlashcardsTitle">
+        <h2>Flashcards</h2>
+        <em class="fas fa-search fa-lg search-icon-color"></em>
+        <input type="text" v-model="keyword" id="search-box">
+      </div>
       <div class="table-container">
         <table>
           <thead>
@@ -23,7 +27,7 @@
         <div class="tbody-container">
           <table>
             <tbody>
-              <tr v-for="flashcard in flashcards" :key="flashcard.id" @click="displayAnswerWithLineBreaks(flashcard.id)">
+              <tr v-for="flashcard in filteredFlashcards" :key="flashcard.id" @click="displayAnswerWithLineBreaks(flashcard.id)">
                 <td style="width: 10%;">
                   <input v-if="flashcard.id === editId" type="text" v-model="flashcard.question">
                   <span v-else>{{ flashcard.question }}</span>
@@ -111,6 +115,28 @@
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   margin-bottom: 20px;
   margin-top: 20px;
+}
+
+.FlashcardsTitle {
+  position: relative;
+}
+
+.search-icon-color {
+  position: absolute;
+  top:14px;
+  left:12px;
+  z-index: 1;
+}
+
+#search-box {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 30%;
+  margin-bottom: 5px;
+  margin-top: 0px;
+  padding: 8px;
+  padding-left: 50px;
 }
 
 .settings-container {
@@ -231,6 +257,7 @@ export default {
   },
   data() {
     return {
+      keyword: '',
       flashcards: [
         {
           id: 1,
@@ -261,6 +288,21 @@ export default {
   mounted() {
     this.openConfig();
     // this.flashcards = this.generateTestData();
+  },
+  computed: {
+    filteredFlashcards() {
+      const res = [];
+      console.log('daaaaa');
+      for(let i in this.flashcards) {
+        console.log(i);
+        let card = this.flashcards[i];
+        console.log(card);
+        if((card.question.indexOf(this.keyword) !== -1) || card.answer.indexOf(this.keyword) !== -1) {
+          res.push(card);
+        }
+      }
+      return res;
+    }
   },
   methods: {
     displayAnswerWithLineBreaks(id) {
