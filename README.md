@@ -258,7 +258,7 @@ which python
 export PYTHON_PATH=/Library/Frameworks/Python.framework/Versions/2.7/bin/python
 npm run electron:build
 
-# latest
+# To use dev mode
 nvm use 16
 npm run dev
 ```
