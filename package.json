@@ -17,7 +17,7 @@
     "dist": "electron-builder",
     "start": "electron .",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "publish": "vue-cli-service electron:build -mw -p always"
+    "publish": "vue-cli-service electron:build -w -p always"
   },
   "main": "background.js",
   "dependencies": {
