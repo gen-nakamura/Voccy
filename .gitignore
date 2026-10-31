@@ -27,3 +27,13 @@ pnpm-debug.log*
 
 #Electron-builder output
 /dist_electron
+/release
+/release-local
+/release-final
+/evidence-stdout.txt
+/evidence-stderr.txt
+/evidence
+/.electron-cache
+/.builder-cache
+/.temp
+/audit.json

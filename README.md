@@ -1,267 +1,63 @@
-# プロジェクトページ
-https://marshy-willow-1d1.notion.site/Voccy-177a3f578f71492a8b1e56d7ec786429?pvs=4
+# Voccy Offline 2.0
 
-# Voccy
-- [x] something you want to achieve 
-- [x] option + C to check the mark
+Windows x64向けのローカル単語学習アプリです。APIキー、ネット接続、ローカルHTTPサーバーは不要です。
 
-## User Stories
-### You can ask question like this (The answer will be created with ChatGPT API)
-`Input: An English phrase or word.`
-- [x] All in one:
-  - [x] Rephrase it.
-  - [x] Give some example sentences
-- [x] definition
+## 利用
 
+配布された `Voccy Setup 2.0.0.exe` からインストールするか、ポータブルZIPを展開して `Voccy.exe` を実行します。Node.jsやnpmのインストールは利用者には不要です。配布物にはコード署名を付けていません。会社の配布・実行ポリシーに従って導入してください。
 
-`Input: An English sentence`
-- [x] All in one
-  - [x] Does it sound natural?
-  - [x] Is it correct in grammar?
-  - [x] Rephrase it.
+単語登録、内容編集、削除、単語・意味の部分一致検索、復習、通知設定を利用できます。従来の外部AI生成機能、自動アップデート、外部CDNはありません。UIもローカルのVue/CSSだけで表示します。
 
-- [ ] これはどういう意味、用法が使われてる？ respond in
-  - [ ] English
-  - [ ] Japanese
+## データと互換性
 
+- 元のアプリ名 `voccy`、appId `voccy_gen-nakamura`、既定の `%APPDATA%\voccy\voccy.db` を維持します。
+- `flashcards`、`settings`、`records`、`notified_versions` と既存のID・結果・日時を保持します。
+- 既存DBを開く際は、スキーマ処理前にSQLiteのオンラインバックアップを `voccy.db.backup-<日時>` に作成し、`integrity_check` を行います。WAL内のコミット済みデータも含みます。バックアップに失敗した場合は起動を中止します。
+- 削除済みカードに関する学習履歴は旧版同様に残します。このため外部キー強制は旧sqlite3と同じく無効です。
+- 空DBやID 1を削除したDBに、起動時にサンプル単語を再挿入しません。
+- 日時は旧版の `YYYY-MM-DD HH:mm`（PCのローカル時刻）を維持します。復習期限は同じローカル形式の現在時刻と比較します。旧データには元のタイムゾーン情報がないため、UTCへの推測変換はしません。
+- 習得済みは「今回も含めて3回連続check」の場合だけです。今回cross/circleなら習得済みにはなりません。既存のdoneデータを勝手に再分類しません。
+- 設定変更で既存カードの復習予定を再ランダム化しません。編集は質問・回答だけを変更します。
 
-`Input: A Japanese sentence, phrase or word.`
-- [x] How can I say this in English?
+バックアップから戻す場合はアプリを完全終了し、まず現在のデータフォルダー全体を別の場所に保存してください。その後、必要なバックアップを `voccy.db` に戻します。旧DBのWAL/SHMが残っている場合は、元ファイルとともに退避してから復元してください。起動中にDBを上書きしないでください。
 
-`Input: An English sentence and the specific word or phrase inside. (In case you want to understand how to use a word in a certain context.)`
-- [ ] What does this word/phrase mean in this sentence?
-  - [ ] give some example sentences that the word/phrase is used in similar way.
-- [ ] この文章でのこの単語/連語はどういう意味？
-  - [ ] その他の例文
+## 通知
 
-`Input: Some specific situation you face.`
-- [x] こんな時英語でなんて言う？
-  - 形容詞での表現の幅が増えたり
-  - 同じ事象を表現するのにも引き出しが増える
-- [ ] この会話にどう返す？
+通知時刻は `["07:00","13:00","19:00"]` の形式で設定します。時・分の範囲、最大復習件数をメインプロセスでも検証します。有効な通知には1件以上の時刻が必要です。空配列は通知無効の場合のみ使えます。
 
-`Input: New vocabulary or phrase.`
-- [ ] Just give you an answer.
+タイマーは1本だけ保持し、設定変更・無効化・終了で解除します。古いコールバックも世代番号で無効化します。スリープ復帰後に再計算します。通知はアプリ起動中だけ届き、OSの通知設定や集中モードにも従います。PCのタイムゾーンを変更した場合はアプリを再起動してください。
 
+## 開発・ビルド
 
-### Vocab test
-- [x] User can see vocabs
-- [x] User has a button to see the correct answer.
-- [x] User can submit the result with three options.
-  - [x] Immediate understand
-  - [x] Understand in a min.
-  - [x] Cannot understand.
+Node.js 24.22.1以降の24系、npm 12.2.1以降を使用します。Electron内蔵Node.jsと開発用Node.jsは別なので、両方のバージョンを確認してください。
 
-### Reminder
-- [x] Reminds your vocab test in a certain days after.
-- [x] User can choose how many times in a day to have a set of tests.
-
-
-### Pronunciation
-- [ ] Put instructions how to pronunce it.
-
-### Basic usage
-- [ ] User can open a prompt with shortcut keys.
-  - [ ] ^ + Space
-  - [ ] ^ + ⇧ + Space: With a list of available questions.
-  - [ ] ^ + ⌘ + Space: Automatically paste clipboard to the vocabulary section.
-- [ ] Put answer when you press
-  - [ ] ⌘ + Enter: English
-  - [ ] ⌥ + Enter: Japanese
-- [ ] Show rephrasing or other example sentences when the user presses [ + ]
-- [ ] Submit the vocabulary when you press Command + Shift + Enter.
-
-## DB definitions
-- flashcards
-  - id
-  - question
-  - answer
-  - previous_result
-  - latest_result
-  - latest_test_timestamp
-  - scheduled_test_timestamp
-
-- settings
-  - id
-  - remind_enabled
-  - remind_times
-  - max_test_nums
-
-- records
-  - id
-  - event (add, study)
-  - timestamp
-
-- quota_failures
-  - time
-
-- [x] when you open the app (app.ready)
-  - [x] create flashcards
-  - [x] create settings
-  - [x] insert first settings value
-  - [x] set process.env
-  - [x] create test_records
-  - [ ] create quota_failures
-- [x] when you add a new vocab
-  - [x] insert QnA
-  - [x] update the scheduled test timestamp
-- [x] when you change the settings
-  - [x] update settings
-  - [x] set process.env
-  - [x] update all the scheduled test timestamp
-- [x] when you open the flashcards test
-  - [ ] show quota_failures
-  - [x] get quizsets
-- [ ] when you take the flashcards test
-  - [x] record status
-  - [x] update the scheduled test timestamp
-  - [ ] record the time you did
-- [ ] when you've done all the flashcards test
-  - [ ] delete the time of quota_failures
-- [ ] when the app notifies you about the test schedule
-  - [ ] add time to quota_failures 
-- [x] when you open the list of flashcards and settings (open config)
-  - [x] show
-  - [x] delete
-  - [x] update
-
-## TODO
-- [x] 画面をどうするか
-- [x] 問題の方式、ただただanswerを隠せばいいのか、逆も用意したほうがいいのか
-  - [x] Vocab - Definitionというのを撤廃してQuestion - Answerの方式にする。
-- [x] caht GPTの質問方法について精度高めていかないと
-- [x] chat GPTへのアクセス方法について、/caht/completionも試してみる
-- [x] max_tokenの数とか
-- [x] play groundで試す
-- [x] インプットの覚え方としてはいいものになりそう、アウトプットが十分にできる？
-- [x] クラス構成
-- [x] MVP
-  - [x] アプリを開ける
-  - [x] 汚くても画面がある
-  - [x] 単語を入力、記憶ができる
-  - [x] テスト画面
-  - [x] それぞれのテストについてステータスを記憶できる
-  - [x] chatGPTの翻訳を最低限
-- [x] doneのステータス
-- [x] getQuizzes関数で今テストするべきものを取り出す
-- [x] アウトプットも大事だけどこのアプリで主に担うのはインプットの補助。アウトプット学習は日常から工夫することで補いたい
-- [x] dbからアップデートした時に変更が反映されているか
-  - [x] それぞれのエフェクト実装
-- [x] 削除の確認
-- [x] dbの一括操作
-- [x] flashcardsのリストを表示できる
-  - [x] 修正
-  - [x] 削除
-- [ ] enable ⌘+F
-
-- reminder時間の計算
-- 時間ごとのイベントトリガー
-- chatGPTの画像(現実的ではなさそう)
-- 記録機能
-  - データにセーブする機能
-  - 表示する機能
-- ノルマクリアについて
-- カード学習の追加機能
-  - 戻るボタン
-  - 発音記号
-  - 音声
-  - 品詞の指定
-- ショートカットキー
-
-- [x] reminder時間を計算する関数
-  - [x] configがアップデートされる度に呼び出す
-  - [x] 時間トリガーも変更する
-- [x] 時間でトリガー発生させる
-- [ ] 名詞を画像と一緒に覚える
-- [ ] どのくらいやったかの記録、時間帯の判定
-- [ ] ノルマクリアのステータス
-  - [ ] 通知と同時にその時間をバツにする
-  - [ ] バツが複数ある時に警告（スキップorやる）
-  - [ ] doneと同時にノルマステータスを削除
-  - [ ] Congratulationsにいつの分が終わったのが記載する
-- [ ] カード学習で戻る機能
-- [ ] 発音記号
-- [ ] 音声
-- [ ] 品詞の指定　
-- [x] 初期のチュートリアル値の設定
-- [ ] ショートカットキーの実装
-- [x] 回答後のエフェクト→なしでいいんじゃない？
-
-- [ ] 集計する必要のあるデータ
-  - 単語を追加した時
-    - 時間
-  - 学習した時
-    - 時間
-
-- [ ] 学習データの集計について
-  - 一日に追加した単語数、累計
-  - 一日に学習した単語数、累計
-  - 一日の平均追加単語数
-  - 一日の平均学習単語数
-  - done: 完璧に覚えた単語数
-  - check: ほとんど覚えた単語数
-  - circle: ある程度覚えた単語数
-  - null, cross: needs to be improved
-  - circle, check, doneになるまでの平均学習回数
-  - 直近1ヶ月、一週間などで上記のデータ
-
-- [x] download the app, initialize
-- [ ] update settings
-- [x] put some words
-- [x] do a test
-- [ ] edit some words
-- [ ] delete some words
-
-- create F table
-- insert, update, delete F records
-- create S table
-- update S record
-- read all the F records
-- read the F records with some conditions
-- change status of a record
-
-## MVP
-- Basic pages.
-- User can input a word.
-- It can be stored in a db.
-- User can do a test with the word.
-- The result will also be stored into db.
-- distribute an app with electron-forge
-
-## Project setup
-```
-npm install
-```
-
-### Compiles and hot-reloads for development
-```
-npm run serve
-```
-
-### Compiles and minifies for production
-```
-npm run build
-```
-
-### Lints and fixes files
-```
+```powershell
+npm ci
 npm run lint
+npm test
+npm run build
+npm start
+npm run dist
 ```
 
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+`npm run dist` はWindows x64 NSISを `release/` に生成します。`--publish never` が固定されており、自動公開しません。開発・ビルド時の依存取得と脆弱性監査にはネット接続が必要です。生成されたアプリの利用時には不要です。
 
-Python ver 2 is no longer supported by mac os
-```
-nvm use 16
-which python
-export PYTHON_PATH=/Library/Frameworks/Python.framework/Versions/2.7/bin/python
-npm run electron:build
+Electron 45.2.1 / 内蔵Node.js 24.22.1 / SQLite 3.53.4を使用しています。旧Vue CLI/webpack構成をViteへ移行し、実行時npm依存を持たず、VueはJSにバンドルします。minimatch等の修正版overridesは開発ツールの既知の脆弱性対策です。変更する場合はlint・テスト・実ビルドを再確認してください。
 
-# To use dev mode
-nvm use 16
-npm run dev
+## セキュリティと検証
+
+固定7操作だけをcontextBridgeで公開し、IPCで送信元ウィンドウ・メインフレーム・URLを確認します。レンダラーのNode統合は無効、contextIsolation/sandbox/webSecurityは有効です。CSPで接続・フレーム・外部スクリプトを禁止し、ナビゲーション・新規ウィンドウ・ダウンロード・権限要求を拒否します。Chromiumの通信要求も配布アセット以外を遮断し、背景通信とWPADプロキシ自動検出を無効にします。
+
+```powershell
+node node_modules/electron/cli.js tests/electron-smoke.cjs
+npm audit
+npm audit --omit=dev
 ```
-### When build/distribution
-add self sign
-`export CSC_NAME=VOCCY_SELF_SIGN`
+
+Electron統合テストは `evidence/` 内の専用プロファイルを使用し、実ユーザーのDBを使いません。結果、スクリーンショット、Chromium通信ログを保存します。通常のユニットテストも一時DBのみを使用します。
+
+既知の制限: 実ユーザーの旧DBはこのPCにないため、旧スキーマの再現DBで互換性を検証しました。通信検証は観測した起動・CRUD等のシナリオの結果であり、あらゆるOS・将来の実行を保証するものではありません。OS通知の実際の表示、長時間待機、物理的なスリープ復帰、インストール/アンインストールの実施は別途受入確認が必要です。コード署名は未設定です。
+
+Node.js 2026-10-21のセキュリティ情報: https://nodejs.org/en/blog/vulnerability/october-2026-security-releases
+
+Electronの推奨設定: https://www.electronjs.org/docs/latest/tutorial/security
