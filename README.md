@@ -63,3 +63,5 @@ Electron統合テストは `evidence/` 内の専用プロファイルを使用�
 Node.js 2026-10-21のセキュリティ情報: https://nodejs.org/en/blog/vulnerability/october-2026-security-releases
 
 Electronの推奨設定: https://www.electronjs.org/docs/latest/tutorial/security
+
+処理ブロックごとの変更理由・コード解説は [コード変更解説](docs/CODE_CHANGES.ja.md) を参照してください。
